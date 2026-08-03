@@ -65,6 +65,11 @@ button{font:inherit}
 .seg[data-show="1"] span{opacity:1}
 .legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:11px;font-size:12px;color:var(--ink-2)}
 .legend i{display:inline-block;width:11px;height:11px;margin-right:6px;vertical-align:-1px;border:1px solid rgba(0,0,0,.25)}
+.extra-bar{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-top:12px;padding:9px 14px;
+  background:var(--card);border:1px dashed var(--hwangto);border-radius:2px}
+.extra-bar .ex-h{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--hwangto);text-transform:uppercase}
+.extra-bar .ex-n{font-size:16px;font-weight:600}
+.extra-bar .ex-s{font-size:12px;color:var(--ink-2)}
 
 /* 단계 카드 */
 .stages{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:22px}
@@ -199,7 +204,7 @@ footer a{color:var(--cheong)}
   <div class="wrap top-in">
     <div class="brand">
       <h1>자금 조달 계획보드</h1>
-      <p>총 얼마가 필요하고, 어떤 돈으로, 어느 시점에 채우는지를 한 화면에 둡니다. 출처를 넣으면 계약금·중도금·잔금에 자동으로 배정되고 모자란 단계를 표시합니다.</p>
+      <p>계약 이행에 필요한 매매대금을 어떤 돈으로 어느 시점에 채우는지를 한 화면에 둡니다. 출처를 넣으면 계약금·중도금·잔금에 자동 배정되고 모자란 단계를 표시합니다. 취득세·부대비용은 잔금 이후 별도 지출로 따로 관리합니다.</p>
     </div>
     <div class="toolbar no-print">
       <button class="btn btn-solid" id="btnPrint">인쇄 · PDF 저장</button>
@@ -223,9 +228,9 @@ footer a{color:var(--cheong)}
 
     <div class="grand">
       <div class="gcell hi">
-        <h4>총 필요 자금</h4>
+        <h4>매매대금 (조달 목표)</h4>
         <div class="n mono" id="gNeed">0원</div>
-        <div class="s" id="gNeedSub">매매대금 + 취득세 + 부대비용</div>
+        <div class="s" id="gNeedSub">계약 이행에 필요한 돈</div>
       </div>
       <div class="gcell">
         <h4>총 조달 예정</h4>
@@ -247,6 +252,8 @@ footer a{color:var(--cheong)}
       <span><i style="background:#2B3A34"></i>대출</span>
       <span><i style="background:repeating-linear-gradient(-45deg,var(--juhong) 0 4px,#8E2C1D 4px 8px)"></i>모자란 금액</span>
     </div>
+
+    <div class="extra-bar" id="extraBar" style="display:none"></div>
 
     <div class="stages" id="stages"></div>
   </div>
@@ -276,7 +283,7 @@ footer a{color:var(--cheong)}
       </fieldset>
 
       <fieldset>
-        <legend>취득세 · 부대비용 <span class="hint" style="text-transform:none;letter-spacing:0">(매매대금 외 별도)</span></legend>
+        <legend>취득세 · 부대비용 <span class="hint" style="text-transform:none;letter-spacing:0">— 매매대금과 별개, 상단 차액에 안 들어감</span></legend>
         <div class="f"><label for="i_rate">취득세 합계 세율 (%) <span class="hint">비우면 자동</span></label><input type="number" class="mono" id="i_rate" step="0.01" placeholder="자동"></div>
         <div class="chk"><input type="checkbox" id="i_big"><label for="i_big">전용면적 85㎡ 초과 (농어촌특별세 0.2% 가산)</label></div>
         <div class="f" style="margin-top:11px"><label for="i_exempt">취득세 감면액 <span class="hint">생애최초 등</span></label><input type="number" class="mono" id="i_exempt" step="100000" placeholder="0"></div>
@@ -421,13 +428,14 @@ function calc(){
   const sumJ=funds.reduce((s,f)=>s+f.j,0);
   const provided=sumC+sumM+sumJ;
 
+  // 취득세·부대비용은 매매대금 조달과 분리한다 (계약 이행용 자금이 아니라 잔금 이후 별도 지출).
   const rate=$("i_rate").value.trim()?parseFloat($("i_rate").value):acqRate(price,$("i_big").checked);
   const acqBefore=Math.round(price*rate/100);
   const exempt=num("i_exempt"), reno=num("i_reno"), others=num("i_others"), buffer=num("i_buffer");
   const acqAfter=Math.max(0,acqBefore-exempt);
-  const extra=acqAfter+reno+others+buffer;
-  const need=price+extra;
-  const diff=provided-need;
+  const extra=acqAfter+reno+others+buffer;   // 별도 지출 (상단 차액에 포함하지 않음)
+  const need=price;                          // 상단 판정은 오직 매매대금
+  const diff=provided-need;                  // 매매대금 조달 차액
 
   document.querySelectorAll("[data-krw]").forEach(el=>{const v=num(el.dataset.krw); el.textContent=v?kr(v):"";});
 
@@ -435,17 +443,28 @@ function calc(){
   $("heroName").textContent=$("i_name").value.trim()||"단지명 미입력";
   $("heroStamp").textContent=new Date().toLocaleDateString("ko-KR",{year:"numeric",month:"long",day:"numeric"})+" 기준";
   $("gNeed").textContent=kr(need);
-  $("gNeedSub").textContent = price?("매매 "+kr(price)+(extra?" + 부대 "+kr(extra):"")):"매매대금을 입력하세요";
+  $("gNeedSub").textContent = price?"매매대금 (계약 이행에 필요한 돈)":"매매대금을 입력하세요";
   $("gHave").textContent=kr(provided);
   $("gHaveSub").textContent="계약금 "+kr(sumC)+" · 중도금 "+kr(sumM)+" · 잔금 "+kr(sumJ);
   const dc=$("gDiff"); dc.textContent=(diff>=0?"+":"")+kr(diff).replace("−","-");
   dc.className="n mono "+(diff>=0?"pos":"neg");
-  $("gDiffSub").textContent = diff>=0?"조달이 필요액을 채웁니다":kr(-diff)+" 모자랍니다";
+  $("gDiffSub").textContent = diff>0?"매매대금보다 "+kr(diff)+" 여유":diff<0?kr(-diff)+" 모자랍니다":"매매대금이 정확히 맞습니다";
+
+  /* 취득세·부대비용 별도 안내 (상단 차액과 무관) */
+  const eb=$("extraBar");
+  if(extra>0){
+    eb.style.display="";
+    eb.innerHTML='<span class="ex-h">잔금 외 별도 지출</span>'+
+      '<span class="ex-n mono">'+kr(extra)+'</span>'+
+      '<span class="ex-s">'+[acqAfter>0?"취득세 "+kr(acqAfter):"",reno>0?"인테리어 "+kr(reno):"",
+      others>0?"기타 "+kr(others):"",buffer>0?"예비비 "+kr(buffer):""].filter(Boolean).join(" · ")+
+      ' — 매매대금과 별개로 준비</span>';
+  } else { eb.style.display="none"; }
 
   /* 흐름 바 */
   const segs=[];
   funds.forEach(f=>{const t=f.c+f.m+f.j; if(t>0) segs.push({v:t,c:segClass(f.k),t:f.n||f.k});});
-  const shortM=Math.max(0,need-provided);
+  const shortM=Math.max(0,price-provided);
   if(shortM>0) segs.push({v:shortM,c:"seg-gap",t:"모자란 "+kr(shortM)});
   const fb=$("flowbar"), tot=segs.reduce((s,x)=>s+x.v,0);
   if(!tot){ fb.className="flowbar empty"; fb.textContent="매매대금과 자금 출처를 넣으면 자금 구성이 그려집니다"; }
@@ -477,13 +496,13 @@ function calc(){
     '</td><td>'+cell(f.c)+'</td><td>'+cell(f.m)+'</td><td>'+cell(f.j)+'</td></tr>').join("");
   if(!funds.length) rows='<tr><td colspan="6"><div class="empty-msg" style="border:none;background:none">자금 출처를 입력하면 여기에 배정표가 만들어집니다</div></td></tr>';
   const sumRow='<tr class="sum"><td>합계</td><td></td><td>'+won(provided)+'</td><td>'+won(sumC)+'</td><td>'+won(sumM)+'</td><td>'+won(sumJ)+'</td></tr>';
-  const needRow='<tr class="need"><td>단계별 필요액</td><td></td><td>'+won(need)+'</td><td>'+won(downTot)+'</td><td>'+won(mid)+'</td><td>'+won(final)+'</td></tr>';
+  const needRow='<tr class="need"><td>매매대금 (단계별 필요액)</td><td></td><td>'+won(price)+'</td><td>'+won(downTot)+'</td><td>'+won(mid)+'</td><td>'+won(final)+'</td></tr>';
   const diffRow='<tr class="need"><td>차액 (배정 − 필요)</td><td></td><td>'+won(provided-price)+
     '</td><td>'+won(sumC-downTot)+'</td><td>'+won(sumM-mid)+'</td><td>'+won(sumJ-final)+'</td></tr>';
   $("allocBody").innerHTML=rows+sumRow+needRow+diffRow;
   $("allocNote").innerHTML = extra>0
-    ? "위 배정표는 매매대금 "+won(price)+"만 다룹니다. 취득세·인테리어·부대비용 "+won(extra)+"은 매매대금 밖에서 따로 준비해야 하며, 위 자금 출처에 포함하려면 잔금 칸이 아니라 별도 항목으로 넣어 관리하세요."
-    : "취득세·부대비용을 입력하면 매매대금과 구분해 별도로 표시됩니다.";
+    ? "이 배정표는 매매대금 "+won(price)+"만 다룹니다. 취득세·부대비용 "+won(extra)+"은 잔금 이후 별도로 나가는 돈이라 이 표와 상단 차액에 넣지 않았습니다. 취득세는 잔금일(취득일)로부터 60일 이내 납부입니다."
+    : "취득세·부대비용을 입력하면 매매대금과 구분해 상단에 별도로 표시됩니다.";
 
   /* 챙길 것 */
   const todos=[];
@@ -541,16 +560,16 @@ function renderChecks(d){
   if(gift>0) card("warn","증여 "+kr(gift)+"은 신고와 이체 기록을 남기세요",
     "직계존속 증여공제 한도와 신고 기한을 확인하고, 증여자 계좌에서 직접 이체한 내역을 보관하세요. 한도 초과분은 증여세 대상입니다.");
 
-  if(d.acqAfter>0) card(d.diff>=0?"warn":"bad","취득세 "+kr(d.acqAfter)+"은 매매대금 밖에서 나갑니다",
-    "잔금일 전후로 현금이 필요하고, 잔금일(취득일)로부터 60일 이내에 신고·납부해야 합니다. "+
-    (d.diff<0?"현재 조달로는 이 금액이 채워지지 않으니 조달원을 지정하세요.":"조달에 여유가 있어 충당 가능합니다."));
+  if(d.acqAfter>0) card("warn","취득세 "+kr(d.acqAfter)+"은 별도로 준비하세요",
+    "매매대금과 별개로 나가는 돈이라 위 배정표와 상단 차액에는 넣지 않았습니다. 잔금일(취득일)로부터 60일 이내 신고·납부이며, 생애최초 감면 대상이면 취득세 감면액을 입력해 부담을 줄이세요.");
   if(d.reno>0) card("warn","인테리어 "+kr(d.reno)+"은 잔금 이후 집행을 권합니다",
     "잔금 전에는 소유권이 없어 공사를 하려면 매도인의 서면 동의가 필요하고, 계약이 깨질 경우 원상복구 책임이 생깁니다. 실측만 미리 하세요.");
 
   card(d.diff>=0?"ok":"bad",
-    d.diff>=0?"총 조달이 총 필요액을 채웁니다":"총 "+kr(-d.diff)+"이 모자랍니다",
-    d.diff>=0?"매매대금과 부대비용까지 계산상 맞춰집니다. 미확정 자금이 실제로 들어오는지만 확인하면 됩니다."
-             :"필요 "+won(d.need)+" 대비 조달 "+won(d.provided)+". 부족분을 채울 자금 출처를 추가하거나 예산을 줄이세요.");
+    d.diff>=0?"매매대금 조달이 맞춰집니다":"매매대금이 "+kr(-d.diff)+" 모자랍니다",
+    d.diff>=0?"계약금·중도금·잔금이 계산상 채워집니다. 미확정 자금이 실제로 들어오는지만 확인하면 됩니다."+
+              (d.extra>0?" 취득세·부대비용 "+kr(d.extra)+"은 여기에 포함되지 않은 별도 지출입니다.":"")
+             :"매매대금 "+won(d.price)+" 대비 조달 "+won(d.provided)+". 부족분을 채울 자금 출처를 추가하세요.");
 
   $("checks").innerHTML=c.join("");
 }
