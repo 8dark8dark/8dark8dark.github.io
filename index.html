@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>주택 매수 계획보드 — 자금 · 특약 · 일정</title>
+<title>자금 조달 계획보드 — 총 필요 · 출처 · 단계별 배정</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -24,11 +24,10 @@ body{margin:0;background:var(--paper);color:var(--ink);
 .wrap{max-width:1140px;margin:0 auto;padding:0 20px}
 button{font:inherit}
 
-/* 헤더 */
 .top{border-bottom:1.5px solid var(--ink)}
 .top-in{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;padding:26px 0 18px;flex-wrap:wrap}
 .brand h1{font-family:Hahmlet,"Pretendard Variable",serif;font-weight:900;font-size:clamp(25px,4vw,38px);line-height:1.12;margin:0;letter-spacing:-.02em}
-.brand p{margin:6px 0 0;color:var(--ink-2);font-size:13.5px;max-width:50ch}
+.brand p{margin:6px 0 0;color:var(--ink-2);font-size:13.5px;max-width:52ch}
 .toolbar{display:flex;gap:8px;flex-wrap:wrap}
 .btn{font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:var(--ink);
   border:1.5px solid var(--ink);padding:8px 14px;border-radius:2px;transition:background .15s,color .15s}
@@ -41,88 +40,120 @@ button{font:inherit}
 
 /* 상황판 */
 .hero{padding:30px 0 28px;border-bottom:1px solid var(--line)}
-.hero-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.hero-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:16px}
 .eyebrow{font-size:11px;font-weight:700;letter-spacing:.15em;color:var(--ink-3);text-transform:uppercase}
-.hero-total{font-family:Hahmlet,serif;font-weight:900;font-size:clamp(28px,5.5vw,50px);line-height:1;letter-spacing:-.03em}
-.hero-total small{display:block;font-family:"Pretendard Variable",sans-serif;font-weight:600;font-size:13.5px;color:var(--ink-2);letter-spacing:0;margin-top:8px}
+.hero-name{font-family:Hahmlet,serif;font-weight:900;font-size:clamp(22px,3.5vw,32px);letter-spacing:-.02em;margin-top:6px}
 
-.flowbar{display:flex;height:58px;border:1.5px solid var(--ink);overflow:hidden;background:var(--card)}
+.grand{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--ink);border:1.5px solid var(--ink);margin-bottom:18px}
+.gcell{background:var(--card);padding:16px 18px}
+.gcell.hi{background:var(--ink);color:var(--paper)}
+.gcell h4{margin:0 0 7px;font-size:11.5px;font-weight:700;letter-spacing:.08em;opacity:.85}
+.gcell .n{font-size:clamp(21px,3.6vw,30px);font-weight:600;letter-spacing:-.02em;line-height:1.05}
+.gcell .n.pos{color:var(--cheong)} .gcell .n.neg{color:var(--juhong)}
+.gcell.hi .n{color:var(--paper)}
+.gcell .s{font-size:12px;margin-top:6px;color:var(--ink-2)}
+.gcell.hi .s{color:#C9D2CB}
+
+.flowbar{display:flex;height:52px;border:1.5px solid var(--ink);overflow:hidden;background:var(--card)}
 .flowbar.empty{align-items:center;justify-content:center;color:var(--ink-3);font-size:13px}
 .seg{position:relative;min-width:0;display:flex;align-items:center;justify-content:center;transition:flex-grow .45s cubic-bezier(.4,0,.2,1)}
 .seg + .seg{border-left:1px solid rgba(255,255,255,.35)}
 .seg-own{background:var(--cheong)} .seg-gift{background:var(--cheong-2)}
-.seg-borrow{background:var(--hwangto)} .seg-mortgage{background:#2B3A34}
+.seg-borrow{background:var(--hwangto)} .seg-loan{background:#2B3A34}
 .seg-gap{background:repeating-linear-gradient(-45deg,var(--juhong) 0 7px,#8E2C1D 7px 14px);border-left:1.5px solid var(--ink)}
 .seg span{font-size:10.5px;font-weight:700;color:#fff;white-space:nowrap;padding:0 6px;text-shadow:0 1px 2px rgba(0,0,0,.35);opacity:0;transition:opacity .3s}
 .seg[data-show="1"] span{opacity:1}
 .legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:11px;font-size:12px;color:var(--ink-2)}
 .legend i{display:inline-block;width:11px;height:11px;margin-right:6px;vertical-align:-1px;border:1px solid rgba(0,0,0,.25)}
 
-.board{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-top:22px}
-.bcard{background:var(--card);padding:16px 17px}
-.bcard h4{margin:0 0 10px;font-size:11.5px;font-weight:700;letter-spacing:.09em;color:var(--ink-3)}
-.bcard .big{font-size:25px;font-weight:600;letter-spacing:-.02em;line-height:1.15}
-.bcard .big.warn{color:var(--juhong)}
-.bcard .sub{font-size:12.5px;color:var(--ink-2);margin-top:5px;line-height:1.5}
-.meter{height:7px;background:var(--line-soft);margin-top:11px;overflow:hidden}
-.meter i{display:block;height:100%;background:var(--cheong);transition:width .4s}
-.mini{margin-top:9px;font-size:12.5px;color:var(--ink-2)}
-.mini li{margin:2px 0}
-ul.mini{padding-left:16px}
+/* 단계 카드 */
+.stages{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:22px}
+.stage{border:1px solid var(--line);background:var(--card);padding:15px 16px;border-top:3px solid var(--cheong)}
+.stage.gap{border-top-color:var(--juhong)}
+.stage .st-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.stage .st-h b{font-size:14px}
+.stage .st-dd{font-size:11.5px;font-weight:700;font-family:"IBM Plex Mono",monospace}
+.st-dd.soon{color:var(--juhong)} .st-dd.near{color:var(--hwangto)} .st-dd.far{color:var(--ink-3)}
+.stage .need{font-size:22px;font-weight:600;letter-spacing:-.02em;margin-top:8px}
+.stage .line{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink-2);margin-top:6px}
+.stage .line .v{font-family:"IBM Plex Mono",monospace;font-weight:500}
+.stage .bar{height:6px;background:var(--line-soft);margin-top:9px;overflow:hidden}
+.stage .bar i{display:block;height:100%;background:var(--cheong);transition:width .4s}
+.stage.gap .bar i{background:var(--juhong)}
+.stage .tag-gap{color:var(--juhong);font-weight:700}
+.stage .tag-ok{color:var(--cheong);font-weight:700}
 
-/* 섹션 */
-section{padding:38px 0;border-bottom:1px solid var(--line)}
+section{padding:36px 0;border-bottom:1px solid var(--line)}
 .sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:18px;flex-wrap:wrap}
 .sec-num{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;color:var(--juhong);padding-top:4px}
 .sec-head h2{font-family:Hahmlet,serif;font-weight:700;font-size:21px;margin:0;letter-spacing:-.01em}
 .sec-head p{margin:0;font-size:13px;color:var(--ink-3)}
 .sec-head .spacer{flex:1}
 
-/* 입력 */
 .fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(285px,1fr));gap:18px}
 fieldset{border:1px solid var(--line);background:var(--card);padding:15px 16px 17px;margin:0;border-radius:2px}
 legend{font-size:11.5px;font-weight:700;letter-spacing:.09em;color:var(--cheong);padding:0 7px}
 .f{margin-bottom:11px} .f:last-child{margin-bottom:0}
 .f label{display:block;font-size:12.5px;font-weight:600;color:var(--ink-2);margin-bottom:4px}
 .f .hint{font-weight:400;color:var(--ink-3)}
-input[type=text],input[type=number],input[type=date],select,textarea{
-  width:100%;font:inherit;font-size:14px;padding:8px 10px;border:1px solid var(--line);
-  border-radius:2px;background:#fff;color:var(--ink)}
+input[type=text],input[type=number],input[type=date],select{width:100%;font:inherit;font-size:14px;padding:8px 10px;
+  border:1px solid var(--line);border-radius:2px;background:#fff;color:var(--ink)}
 input.mono{font-family:"IBM Plex Mono",monospace;text-align:right}
 input[readonly]{background:#EEF0EA;color:var(--ink-2)}
-input::placeholder,textarea::placeholder{color:#A9B0A7}
+input::placeholder{color:#A9B0A7}
 .f .krw{display:block;font-size:11.5px;color:var(--cheong);margin-top:3px;text-align:right;min-height:16px;font-weight:600}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .chk{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2);margin-top:8px}
 .chk input{width:16px;height:16px;accent-color:var(--cheong)}
 
-.rowtbl{width:100%;border-collapse:collapse;font-size:13.5px}
-.rowtbl th{text-align:left;font-size:11.5px;letter-spacing:.06em;color:var(--ink-3);padding:0 6px 6px;font-weight:700}
-.rowtbl td{padding:3px 4px;vertical-align:middle}
-.rowtbl input,.rowtbl select{padding:6px 8px;font-size:13px}
+/* 자금 출처 편집 */
+.fund-edit{overflow-x:auto}
+.fund-tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:720px}
+.fund-tbl th{text-align:left;font-size:11px;letter-spacing:.05em;color:var(--ink-3);padding:0 6px 7px;font-weight:700;white-space:nowrap}
+.fund-tbl td{padding:3px 4px;vertical-align:middle}
+.fund-tbl input,.fund-tbl select{padding:6px 8px;font-size:13px}
+.fund-tbl .tot{font-family:"IBM Plex Mono",monospace;font-weight:600;text-align:right;white-space:nowrap;color:var(--ink-2);padding-right:8px}
 .del{background:none;border:none;color:var(--ink-3);cursor:pointer;font-size:17px;line-height:1;padding:4px 7px;border-radius:2px}
 .del:hover{color:var(--juhong);background:#fff}
+.risk-td{text-align:center}
+.risk-td input{width:16px;height:16px;accent-color:var(--juhong)}
 
-/* 결과 표 */
-.tbl-block{margin-bottom:30px;break-inside:avoid}
-.tbl-cap{display:flex;align-items:baseline;gap:10px;margin-bottom:8px}
-.tbl-cap h3{font-family:Hahmlet,serif;font-size:15.5px;font-weight:700;margin:0}
-.tbl-cap span{font-size:12px;color:var(--ink-3)}
+/* 배정표 */
 .tscroll{overflow-x:auto;border:1px solid var(--ink)}
-table.data{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--card);min-width:640px}
-table.data th{background:var(--ink);color:var(--paper);text-align:left;padding:9px 12px;font-size:11.5px;font-weight:700;letter-spacing:.07em;white-space:nowrap}
-table.data td{padding:9px 12px;border-top:1px solid var(--line-soft);vertical-align:top}
-table.data td:nth-child(1){font-weight:600;white-space:nowrap}
-table.data td:nth-child(2){text-align:right;white-space:nowrap;font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;font-weight:500}
-table.data td:nth-child(3),table.data td:nth-child(4){font-size:12.5px;color:var(--ink-2);line-height:1.5}
+table.data{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--card);min-width:680px}
+table.data th{background:var(--ink);color:var(--paper);text-align:right;padding:9px 12px;font-size:11.5px;font-weight:700;letter-spacing:.05em;white-space:nowrap}
+table.data th:first-child,table.data th:nth-child(2){text-align:left}
+table.data td{padding:9px 12px;border-top:1px solid var(--line-soft);text-align:right;white-space:nowrap;
+  font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+table.data td:first-child{text-align:left;font-family:inherit;font-weight:600}
+table.data td:nth-child(2){text-align:left;font-family:inherit}
+table.data tr.risk td:first-child::after{content:" ⚠";color:var(--juhong)}
+table.data tr.risk{background:#FBF1EE}
 table.data tr.sum{background:#DFE3D9;font-weight:700}
 table.data tr.sum td{border-top:1.5px solid var(--ink)}
-table.data tr.sum td:nth-child(3),table.data tr.sum td:nth-child(4){color:var(--ink)}
-table.data td.neg{color:var(--juhong);font-weight:600}
-.empty-msg{padding:26px 16px;text-align:center;color:var(--ink-3);font-size:13px;background:var(--card);border:1px dashed var(--line)}
+table.data tr.need td{background:#EEF0EA;color:var(--ink-2);font-size:12.5px}
+table.data .z{color:var(--ink-3)}
+.pill{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.04em;padding:2px 9px;border-radius:99px;color:#fff}
+.p-본인{background:var(--gray)} .p-증여{background:var(--cheong-2)} .p-차용{background:var(--hwangto)} .p-대출{background:#2B3A34}
+.empty-msg{padding:24px 16px;text-align:center;color:var(--ink-3);font-size:13px;background:var(--card);border:1px dashed var(--line)}
+
+/* 챙길 것 */
+.todos{display:flex;flex-direction:column;gap:9px}
+.todo{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);background:var(--card);padding:12px 15px;border-left:3px solid var(--cheong)}
+.todo.risk{border-left-color:var(--juhong);background:#FBF1EE}
+.todo > input{width:18px;height:18px;margin-top:2px;accent-color:var(--cheong);flex:none}
+.todo-body{flex:1;min-width:0}
+.todo-top{display:flex;gap:9px;align-items:baseline;flex-wrap:wrap}
+.todo-name{font-weight:700;font-size:14px}
+.todo-amt{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:14px}
+.todo-when{font-size:11.5px;font-weight:700;padding:1px 8px;border-radius:2px;color:#fff;background:var(--gray)}
+.todo-when.중도금{background:var(--hwangto)} .todo-when.잔금{background:#2B3A34}
+.todo-memo{font-size:12.5px;color:var(--ink-2);margin-top:3px;line-height:1.5}
+.todo.done .todo-name,.todo.done .todo-amt{color:var(--ink-3);text-decoration:line-through}
+.risk-flag{font-size:11px;font-weight:700;color:var(--juhong)}
 
 /* 점검 */
-.checks{display:grid;grid-template-columns:repeat(auto-fit,minmax(285px,1fr));gap:12px}
+.checks{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:12px}
 .chk-card{border:1px solid var(--line);border-left:4px solid var(--line);background:var(--card);padding:13px 15px;break-inside:avoid}
 .chk-card.ok{border-left-color:var(--cheong)} .chk-card.warn{border-left-color:var(--hwangto)} .chk-card.bad{border-left-color:var(--juhong)}
 .chk-card b{display:block;font-size:13.5px;margin-bottom:4px}
@@ -130,64 +161,13 @@ table.data td.neg{color:var(--juhong);font-weight:600}
 .ok .tag{background:var(--cheong)} .warn .tag{background:var(--hwangto)} .bad .tag{background:var(--juhong)}
 .chk-card p{margin:0;font-size:12.5px;color:var(--ink-2);line-height:1.55}
 
-/* 특약 */
-.clauses{border:1px solid var(--line);background:var(--card)}
-.cl{display:flex;gap:11px;padding:11px 15px;border-bottom:1px solid var(--line-soft);align-items:flex-start}
-.cl:last-child{border-bottom:none}
-.cl > input[type=checkbox]{width:17px;height:17px;margin-top:3px;accent-color:var(--cheong);flex:none}
-.cl-body{flex:1;min-width:0}
-.cl-text{width:100%;border:1px solid transparent;background:transparent;font-size:13.5px;line-height:1.55;
-  resize:vertical;min-height:2.6em;padding:3px 6px;border-radius:2px;color:var(--ink)}
-.cl-text:hover{border-color:var(--line-soft);background:#fff}
-.cl-text:focus{border-color:var(--cheong);background:#fff}
-.cl.done .cl-text{color:var(--ink-3);text-decoration:line-through}
-.cl-meta{display:flex;gap:8px;align-items:center;margin-top:4px}
-.cl-meta select{width:auto;font-size:11.5px;padding:3px 7px;color:var(--ink-2)}
-.pill{font-size:10.5px;font-weight:700;letter-spacing:.06em;padding:2px 8px;border:1px solid var(--line);border-radius:99px;color:var(--ink-2);background:#fff}
-
-/* 일정 */
-.deadlines{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
-.dl-chip{border:1px solid var(--line);border-left:3px solid var(--hwangto);background:var(--card);padding:9px 13px;font-size:12.5px}
-.dl-chip b{display:block;font-size:12px;color:var(--ink-3);font-weight:700;letter-spacing:.05em}
-.dl-chip .d{font-weight:600;font-size:14px;margin-top:1px}
-
-.timeline{border-left:2px solid var(--line);margin-left:9px;padding-left:0}
-.tl{position:relative;padding:0 0 16px 26px}
-.tl::before{content:"";position:absolute;left:-7px;top:6px;width:12px;height:12px;border-radius:50%;
-  background:var(--paper);border:2.5px solid var(--gray)}
-.tl.k-자금::before{border-color:var(--cheong)}
-.tl.k-대출::before{border-color:#2B3A34}
-.tl.k-인테리어::before{border-color:var(--hwangto)}
-.tl.k-행정::before{border-color:var(--cheong-2)}
-.tl.k-이사::before{border-color:var(--juhong)}
-.tl.past::before{background:var(--gray);border-color:var(--gray)}
-.tl-in{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
-.tl-date{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--ink-2);min-width:88px;font-weight:500}
-.tl-name{font-weight:600;font-size:14.5px}
-.tl.past .tl-name{color:var(--ink-3)}
-.tl-cat{font-size:10.5px;font-weight:700;letter-spacing:.06em;padding:1px 7px;border-radius:2px;color:#fff;background:var(--gray)}
-.k-자금 .tl-cat{background:var(--cheong)} .k-대출 .tl-cat{background:#2B3A34}
-.k-인테리어 .tl-cat{background:var(--hwangto)} .k-행정 .tl-cat{background:var(--cheong-2)}
-.k-이사 .tl-cat{background:var(--juhong)}
-.tl-dd{font-size:12px;font-weight:700;font-family:"IBM Plex Mono",monospace}
-.tl-dd.soon{color:var(--juhong)} .tl-dd.near{color:var(--hwangto)} .tl-dd.far{color:var(--ink-3)}
-.tl-memo{font-size:12.5px;color:var(--ink-2);margin-top:2px;line-height:1.5}
-
-/* 서류 */
-.docs{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:6px 24px}
-.doc{display:flex;gap:9px;align-items:flex-start;font-size:13.5px;padding:4px 0}
-.doc input{width:17px;height:17px;margin-top:2px;accent-color:var(--cheong);flex:none}
-.doc label{cursor:pointer;color:var(--ink-2)}
-.doc input:checked + label{color:var(--ink-3);text-decoration:line-through}
-
 .note{border:1px solid var(--line);background:var(--card);padding:13px 16px;font-size:12.5px;color:var(--ink-2);line-height:1.6;margin-top:16px}
 footer{padding:28px 0 46px;font-size:12.5px;color:var(--ink-3);line-height:1.7}
 footer a{color:var(--cheong)}
 
 @media (max-width:640px){
-  .flowbar{height:46px} .seg span{font-size:9px}
+  .grand{grid-template-columns:1fr} .flowbar{height:44px} .seg span{font-size:9px}
   .row2{grid-template-columns:1fr}
-  .tl-date{min-width:auto}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 
@@ -198,17 +178,17 @@ footer a{color:var(--cheong)}
   .wrap{max-width:none;padding:0}
   section{padding:12px 0;border-bottom:none}
   .top{border-bottom:2px solid #000}
-  .hero{border-bottom:1px solid #999;padding:10px 0}
-  .flowbar,.legend,.meter{display:none}
-  .board{border-color:#000;background:#000}
-  .bcard{background:#fff}
+  .hero{padding:8px 0;border-bottom:1px solid #999}
+  .flowbar,.legend{display:none}
+  .grand{border-color:#000;background:#000}
+  .gcell{background:#fff;color:#000!important}
+  .gcell.hi{background:#E5E5E5}
+  .gcell.hi .n{color:#000}
+  .stage,.chk-card,.note,.todo{background:#fff;border-color:#666;break-inside:avoid}
   .tscroll{overflow:visible;border:1px solid #000}
   table.data{min-width:0;background:#fff;font-size:9pt}
   table.data th{background:#000;color:#fff}
   table.data tr.sum{background:#E5E5E5}
-  .chk-card,.note,.clauses,.dl-chip{background:#fff;border-color:#666}
-  .cl-text{border:none;background:#fff;resize:none;min-height:0}
-  .tbl-block,.chk-card,.tl,.cl{break-inside:avoid}
   a{text-decoration:none;color:#000}
 }
 </style>
@@ -218,8 +198,8 @@ footer a{color:var(--cheong)}
 <header class="top">
   <div class="wrap top-in">
     <div class="brand">
-      <h1>주택 매수 계획보드</h1>
-      <p>자금이 얼마나 비는지, 계약서에 무엇을 넣을지, 언제 무엇을 해야 하는지를 한 화면에 둡니다. 숫자를 넣는 순간 전부 다시 계산됩니다.</p>
+      <h1>자금 조달 계획보드</h1>
+      <p>총 얼마가 필요하고, 어떤 돈으로, 어느 시점에 채우는지를 한 화면에 둡니다. 출처를 넣으면 계약금·중도금·잔금에 자동으로 배정되고 모자란 단계를 표시합니다.</p>
     </div>
     <div class="toolbar no-print">
       <button class="btn btn-solid" id="btnPrint">인쇄 · PDF 저장</button>
@@ -235,270 +215,148 @@ footer a{color:var(--cheong)}
   <div class="wrap">
     <div class="hero-head">
       <div>
-        <div class="eyebrow" id="heroName">매수 주택 미입력</div>
-        <div class="hero-total mono" id="heroTotal">0원<small id="heroTotalKr">매매대금을 입력하면 계산이 시작됩니다</small></div>
+        <div class="eyebrow">매수 주택</div>
+        <div class="hero-name" id="heroName">단지명 미입력</div>
       </div>
       <div class="eyebrow" id="heroStamp"></div>
     </div>
 
-    <div class="flowbar empty" id="flowbar" role="img" aria-label="자금 출처별 구성 막대">매매대금과 자기자금을 넣으면 여기에 자금 구성이 그려집니다</div>
+    <div class="grand">
+      <div class="gcell hi">
+        <h4>총 필요 자금</h4>
+        <div class="n mono" id="gNeed">0원</div>
+        <div class="s" id="gNeedSub">매매대금 + 취득세 + 부대비용</div>
+      </div>
+      <div class="gcell">
+        <h4>총 조달 예정</h4>
+        <div class="n mono pos" id="gHave">0원</div>
+        <div class="s" id="gHaveSub">자기자금 + 대출</div>
+      </div>
+      <div class="gcell">
+        <h4>차액</h4>
+        <div class="n mono" id="gDiff">0원</div>
+        <div class="s" id="gDiffSub">조달 − 필요</div>
+      </div>
+    </div>
+
+    <div class="flowbar empty" id="flowbar" role="img" aria-label="자금 출처별 구성">매매대금과 자금 출처를 넣으면 자금 구성이 그려집니다</div>
     <div class="legend">
       <span><i style="background:var(--cheong)"></i>본인 자금</span>
       <span><i style="background:var(--cheong-2)"></i>증여</span>
       <span><i style="background:var(--hwangto)"></i>차용</span>
-      <span><i style="background:#2B3A34"></i>주택담보대출</span>
-      <span><i style="background:repeating-linear-gradient(-45deg,var(--juhong) 0 4px,#8E2C1D 4px 8px)"></i>신용대출로 메울 금액</span>
+      <span><i style="background:#2B3A34"></i>대출</span>
+      <span><i style="background:repeating-linear-gradient(-45deg,var(--juhong) 0 4px,#8E2C1D 4px 8px)"></i>모자란 금액</span>
     </div>
 
-    <div class="board">
-      <div class="bcard">
-        <h4>자금 — 아직 못 채운 금액</h4>
-        <div class="big warn mono" id="bGap">0원</div>
-        <div class="sub" id="bGapSub">매매대금을 입력하세요</div>
-      </div>
-      <div class="bcard">
-        <h4>특약 — 계약서 반영 확인</h4>
-        <div class="big mono" id="bClause">0 / 0</div>
-        <div class="meter"><i id="bClauseBar" style="width:0%"></i></div>
-        <ul class="mini" id="bClauseList"></ul>
-      </div>
-      <div class="bcard">
-        <h4>일정 — 다음에 할 일</h4>
-        <div class="big" id="bNext">일정 없음</div>
-        <div class="sub" id="bNextSub">일정을 추가하세요</div>
-      </div>
-      <div class="bcard">
-        <h4>잔금일</h4>
-        <div class="big mono" id="bDday">-</div>
-        <div class="sub" id="bDdaySub">잔금일을 입력하세요</div>
-      </div>
-    </div>
+    <div class="stages" id="stages"></div>
   </div>
 </div>
 
 <!-- 01 입력 -->
 <section class="no-print">
   <div class="wrap">
-    <div class="sec-head"><span class="sec-num">01</span><h2>숫자 입력</h2><p>빈칸은 0으로 계산합니다.</p></div>
-
+    <div class="sec-head"><span class="sec-num">01</span><h2>기본 정보</h2><p>빈칸은 0으로 계산합니다.</p></div>
     <div class="fields">
       <fieldset>
-        <legend>주택과 주택담보대출</legend>
+        <legend>주택과 지급 일정</legend>
         <div class="f"><label for="i_name">단지명 · 동호수</label><input type="text" id="i_name" placeholder="예: OO아파트 101동 1001호"></div>
         <div class="f"><label for="i_price">매매대금</label><input type="number" class="mono" id="i_price" step="1000000" placeholder="0"><span class="krw" data-krw="i_price"></span></div>
-        <div class="f"><label for="i_kb">KB부동산 시세 <span class="hint">담보 평가액</span></label><input type="number" class="mono" id="i_kb" step="1000000" placeholder="0"><span class="krw" data-krw="i_kb"></span></div>
-        <div class="row2">
-          <div class="f"><label for="i_ltv">LTV (%)</label><input type="number" class="mono" id="i_ltv" step="1" value="70"></div>
-          <div class="f"><label for="i_cap">대출 한도 상한</label><input type="number" class="mono" id="i_cap" step="10000000" placeholder="없으면 비움"></div>
-        </div>
-        <div class="f"><label for="i_room">소액임차보증금 차감(방공제)</label>
-          <select id="i_room">
-            <option value="0">미적용 — 구입자금보증 이용</option>
-            <option value="55000000">적용 — 서울 55,000,000원</option>
-            <option value="48000000">적용 — 과밀억제권역 48,000,000원</option>
-            <option value="28000000">적용 — 광역시 등 28,000,000원</option>
-            <option value="25000000">적용 — 그 밖의 지역 25,000,000원</option>
-          </select>
-        </div>
-        <div class="f"><label for="i_loan">실행 예정 대출금액 <span class="hint">자동</span></label><input type="number" class="mono" id="i_loan" readonly><span class="krw" data-krw="i_loan"></span></div>
-      </fieldset>
-
-      <fieldset>
-        <legend>계약 지급 일정</legend>
-        <div class="row2">
-          <div class="f"><label for="i_pre">가계약금</label><input type="number" class="mono" id="i_pre" step="1000000" placeholder="0"></div>
-          <div class="f"><label for="d_pre">지급일</label><input type="date" id="d_pre"></div>
-        </div>
         <div class="row2">
           <div class="f"><label for="i_down">계약금 총액</label><input type="number" class="mono" id="i_down" step="1000000" placeholder="0"></div>
-          <div class="f"><label for="d_down">잔액 지급일</label><input type="date" id="d_down"></div>
+          <div class="f"><label for="d_down">계약일</label><input type="date" id="d_down"></div>
         </div>
         <div class="row2">
           <div class="f"><label for="i_mid">중도금</label><input type="number" class="mono" id="i_mid" step="1000000" placeholder="0"></div>
-          <div class="f"><label for="d_mid">지급일</label><input type="date" id="d_mid"></div>
+          <div class="f"><label for="d_mid">중도금일</label><input type="date" id="d_mid"></div>
         </div>
         <div class="row2">
           <div class="f"><label for="i_final">잔금 <span class="hint">자동</span></label><input type="number" class="mono" id="i_final" readonly></div>
-          <div class="f"><label for="d_final">지급일</label><input type="date" id="d_final"></div>
+          <div class="f"><label for="d_final">잔금일</label><input type="date" id="d_final"></div>
         </div>
       </fieldset>
 
       <fieldset>
-        <legend>세금 · 인테리어 · 부대비용</legend>
+        <legend>취득세 · 부대비용 <span class="hint" style="text-transform:none;letter-spacing:0">(매매대금 외 별도)</span></legend>
         <div class="f"><label for="i_rate">취득세 합계 세율 (%) <span class="hint">비우면 자동</span></label><input type="number" class="mono" id="i_rate" step="0.01" placeholder="자동"></div>
         <div class="chk"><input type="checkbox" id="i_big"><label for="i_big">전용면적 85㎡ 초과 (농어촌특별세 0.2% 가산)</label></div>
         <div class="f" style="margin-top:11px"><label for="i_exempt">취득세 감면액 <span class="hint">생애최초 등</span></label><input type="number" class="mono" id="i_exempt" step="100000" placeholder="0"></div>
         <div class="f"><label for="i_reno">인테리어 예산</label><input type="number" class="mono" id="i_reno" step="1000000" placeholder="0"><span class="krw" data-krw="i_reno"></span></div>
-        <div class="f"><label for="i_others">기타 본인 부담 비용 <span class="hint">중개보수 · 법무사비 · 이사비 중 직접 낼 금액</span></label><input type="number" class="mono" id="i_others" step="100000" placeholder="0"></div>
+        <div class="f"><label for="i_others">기타 본인 부담 <span class="hint">중개보수·법무사비·이사비 중 직접 낼 금액</span></label><input type="number" class="mono" id="i_others" step="100000" placeholder="0"></div>
         <div class="f"><label for="i_buffer">예비비</label><input type="number" class="mono" id="i_buffer" step="1000000" placeholder="0"></div>
-      </fieldset>
-
-      <fieldset>
-        <legend>소득과 상환 심사</legend>
-        <div class="row2">
-          <div class="f"><label for="i_inc1">직전년도 인정소득</label><input type="number" class="mono" id="i_inc1" step="100000" placeholder="0"></div>
-          <div class="f"><label for="i_inc2">전전년도 인정소득</label><input type="number" class="mono" id="i_inc2" step="100000" placeholder="0"></div>
-        </div>
-        <div class="f"><label for="i_incavg">2개년 평균소득 <span class="hint">자동</span></label><input type="number" class="mono" id="i_incavg" readonly><span class="krw" data-krw="i_incavg"></span></div>
-        <div class="row2">
-          <div class="f"><label for="i_dti">DTI 한도 (%)</label><input type="number" class="mono" id="i_dti" step="1" value="60"></div>
-          <div class="f"><label for="i_mrate">주담대 금리 (%)</label><input type="number" class="mono" id="i_mrate" step="0.1" value="4.5"></div>
-        </div>
-        <div class="row2">
-          <div class="f"><label for="i_myears">주담대 만기 (년)</label><input type="number" class="mono" id="i_myears" step="1" value="40"></div>
-          <div class="f"><label for="i_crate">신용대출 금리 (%)</label><input type="number" class="mono" id="i_crate" step="0.1" value="6.5"></div>
-        </div>
-        <div class="row2">
-          <div class="f"><label for="i_low">보수적 예상 (소득 배수)</label><input type="number" class="mono" id="i_low" step="0.1" value="0.5"></div>
-          <div class="f"><label for="i_high">긍정적 예상 (소득 배수)</label><input type="number" class="mono" id="i_high" step="0.1" value="1"></div>
-        </div>
       </fieldset>
     </div>
 
     <fieldset style="margin-top:18px">
-      <legend>내가 마련하는 자금</legend>
-      <table class="rowtbl">
-        <thead><tr><th style="width:28%">내용</th><th style="width:20%">금액</th><th style="width:15%">성격</th><th>비고</th><th style="width:36px"></th></tr></thead>
-        <tbody id="fundRows"></tbody>
-      </table>
-      <button class="btn btn-ghost btn-sm" id="btnAddFund" style="margin-top:10px">항목 추가</button>
+      <legend>자금 출처 <span class="hint" style="text-transform:none;letter-spacing:0">— 각 돈을 어느 단계에 얼마씩 넣을지 적으면 아래 배정표가 자동으로 만들어집니다</span></legend>
+      <div class="fund-edit">
+        <table class="fund-tbl">
+          <thead><tr>
+            <th style="width:150px">자금 출처</th><th style="width:78px">성격</th>
+            <th style="width:120px">계약금</th><th style="width:120px">중도금</th><th style="width:120px">잔금</th>
+            <th style="width:110px;text-align:right">총액</th>
+            <th style="width:52px;text-align:center">미확정</th>
+            <th>메모 · 할 일</th><th style="width:34px"></th>
+          </tr></thead>
+          <tbody id="fundRows"></tbody>
+        </table>
+      </div>
+      <button class="btn btn-ghost btn-sm" id="btnAddFund" style="margin-top:10px">출처 추가</button>
       <p style="font-size:12.5px;color:var(--ink-3);margin:9px 0 0">
-        위에서 아래 순서로 가계약금 · 계약금 잔액 · 중도금에 먼저 배정하고, 남는 금액은 잔금에 씁니다.
+        계약금 칸은 이미 지급했거나 계약 시 낼 돈, 중도금·잔금 칸은 앞으로 낼 돈입니다. 대출은 성격을 대출로 두고 잔금 칸에 넣으세요. 확정되지 않은 돈은 미확정에 체크하면 붉게 표시되고 점검에 잡힙니다.
       </p>
     </fieldset>
   </div>
 </section>
 
-<!-- 02 자금표 -->
+<!-- 02 배정표 -->
 <section>
   <div class="wrap">
-    <div class="sec-head"><span class="sec-num">02</span><h2>자금 정리표</h2><p>은행 상담과 중개사무소에 그대로 보여줄 수 있습니다.</p></div>
-    <div id="tables"></div>
+    <div class="sec-head"><span class="sec-num">02</span><h2>자금 출처별 배정표</h2><p>총액과 단계별 배정을 한 번에 봅니다.</p></div>
+    <div class="tscroll"><table class="data">
+      <thead><tr><th>자금 출처</th><th>성격</th><th>총액</th><th>계약금</th><th>중도금</th><th>잔금</th></tr></thead>
+      <tbody id="allocBody"></tbody>
+    </table></div>
+    <div class="note" id="allocNote"></div>
   </div>
 </section>
 
-<!-- 03 점검 -->
+<!-- 03 챙길 것 -->
 <section>
   <div class="wrap">
-    <div class="sec-head"><span class="sec-num">03</span><h2>자동 점검</h2><p>입력값 기준으로 걸리는 지점입니다.</p></div>
+    <div class="sec-head"><span class="sec-num">03</span><h2>지금 챙길 것</h2><p>아직 안 낸 돈만 시점순으로 모았습니다. 처리하면 체크하세요.</p></div>
+    <div class="todos" id="todos"></div>
+  </div>
+</section>
+
+<!-- 04 점검 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">04</span><h2>자동 점검</h2><p>입력값 기준으로 걸리는 지점입니다.</p></div>
     <div class="checks" id="checks"></div>
-  </div>
-</section>
-
-<!-- 04 특약 -->
-<section>
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="sec-num">04</span><h2>계약 특약 리스트</h2>
-      <p>계약서에 넣기로 한 문구를 확인하고 지웁니다.</p>
-      <span class="spacer"></span>
-      <button class="btn btn-ghost btn-sm no-print" id="btnAddClause">특약 추가</button>
-      <button class="btn btn-ghost btn-sm no-print" id="btnClauseTpl">기본 문구 불러오기</button>
-    </div>
-    <div class="clauses" id="clauseList"></div>
-    <div class="note">
-      기본 문구는 일반적으로 쓰이는 예시입니다. 실제 계약서에 넣을 문장은 공인중개사와 함께 물건 상태에 맞게 고쳐 쓰시고, 금액이나 책임 소재가 걸린 조항은 법률 전문가의 확인을 받으시기 바랍니다.
-    </div>
-  </div>
-</section>
-
-<!-- 05 일정 -->
-<section>
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="sec-num">05</span><h2>일정</h2>
-      <p>계약금부터 인테리어 준공, 전입신고까지 한 줄로 봅니다.</p>
-      <span class="spacer"></span>
-      <button class="btn btn-ghost btn-sm no-print" id="btnAddEvent">일정 추가</button>
-      <button class="btn btn-ghost btn-sm no-print" id="btnEventTpl">기본 일정 불러오기</button>
-    </div>
-
-    <div class="deadlines" id="deadlines"></div>
-    <div class="timeline" id="timeline"></div>
-
-    <details class="no-print" style="margin-top:18px">
-      <summary style="cursor:pointer;font-size:13px;font-weight:600;color:var(--cheong)">일정 편집</summary>
-      <fieldset style="margin-top:10px">
-        <legend>일정 항목</legend>
-        <table class="rowtbl">
-          <thead><tr><th style="width:28%">일정</th><th style="width:17%">날짜</th><th style="width:14%">구분</th><th>메모</th><th style="width:60px">완료</th><th style="width:36px"></th></tr></thead>
-          <tbody id="eventRows"></tbody>
-        </table>
-      </fieldset>
-    </details>
-  </div>
-</section>
-
-<!-- 06 서류 -->
-<section>
-  <div class="wrap">
-    <div class="sec-head"><span class="sec-num">06</span><h2>은행 갈 때 챙길 서류</h2><p>체크는 이 화면에서만 유지됩니다.</p></div>
-    <div class="docs" id="docs"></div>
+    <div class="note">판정은 입력한 숫자만 놓고 계산한 결과입니다. 대출 실행과 세금 감면, 보증금 반환은 각 기관과 상대방의 확인으로 정해지므로 참고용으로만 쓰시기 바랍니다.</div>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
-    이 페이지는 계산 도구입니다. 대출 한도와 세율, 감면 요건은 정책에 따라 바뀌므로 신청 시점의 공고를 확인하시기 바랍니다. 입력값은 어디에도 저장되지 않으며, 브라우저를 닫으면 사라집니다. 남겨두려면 계획 내보내기를 쓰세요.<br>
-    <a href="https://www.hf.go.kr/ko/sub01/sub01_01_02.do" target="_blank" rel="noopener">한국주택금융공사 상품안내</a> ·
-    <a href="https://www.wetax.go.kr" target="_blank" rel="noopener">위택스</a> ·
+    입력값은 어디에도 저장되지 않으며 브라우저를 닫으면 사라집니다. 남기려면 계획 내보내기로 파일을 받아 두세요. 실제 소득·차용·주소가 담긴 그 파일은 공개 저장소에 올리지 마세요.<br>
+    <a href="https://www.hf.go.kr/ko/sub01/sub01_01_02.do" target="_blank" rel="noopener">한국주택금융공사</a> ·
+    <a href="https://www.wetax.go.kr" target="_blank" rel="noopener">위택스(취득세)</a> ·
     <a href="https://rt.molit.go.kr" target="_blank" rel="noopener">국토교통부 실거래가</a>
   </div>
 </footer>
 
 <script>
 "use strict";
-
-/* ── 템플릿 (개인정보 없음) ─────────────────────── */
-const CLAUSE_TPL = [
-  {t:"매도인은 잔금일까지 등기부등본상 권리관계를 계약 시점과 동일하게 유지하며, 근저당권 등 제한물권은 잔금 수령과 동시에 말소하고 그 비용은 매도인이 부담한다.", g:"권리"},
-  {t:"매수인의 주택담보대출이 금융기관 심사에서 승인되지 않을 경우 본 계약은 무효로 하고, 매도인은 수령한 계약금 전액을 즉시 반환한다.", g:"대출"},
-  {t:"현 시설 상태의 매매계약이나, 잔금일까지 발견되는 누수, 보일러, 배관, 결로 등 중대한 하자는 매도인이 수리하거나 그 비용을 부담한다.", g:"하자"},
-  {t:"매도인은 잔금일까지의 관리비, 장기수선충당금, 도시가스, 전기, 수도 요금을 정산하고 영수증을 제시한다.", g:"정산"},
-  {t:"매수인의 인테리어 실측과 견적을 위해 잔금일 이전 실내 방문이 필요한 경우 매도인은 사전 협의 후 이에 협조한다.", g:"인테리어"},
-  {t:"매도인은 잔금일에 이사를 완료하고 열쇠와 현관 비밀번호, 관리사무소 출입 카드를 매수인에게 인계한다.", g:"인도"},
-  {t:"본 물건에 임차인 및 전입세대가 없음을 매도인이 확인하며, 잔금일까지 새로운 임대차를 설정하지 않는다.", g:"권리"},
-  {t:"잔금일 변경이 필요한 경우 상호 협의하며, 일방의 사정으로 지연될 경우의 처리 방법을 별도로 정한다.", g:"일정"},
-  {t:"매도인은 잔금일에 소유권이전등기에 필요한 서류 일체를 매수인 또는 매수인이 지정한 법무사에게 교부한다.", g:"등기"},
-  {t:"본 특약에 정하지 않은 사항은 관계 법령과 일반 거래 관례에 따른다.", g:"기타"}
-];
-
-const EVENT_TPL = [
-  {n:"가계약금 지급", k:"자금"},
-  {n:"계약서 작성 · 계약금 지급", k:"자금"},
-  {n:"주택담보대출 신청", k:"대출"},
-  {n:"신용대출 한도 조회 · 신청", k:"대출"},
-  {n:"인테리어 업체 실측 · 견적", k:"인테리어"},
-  {n:"인테리어 업체 계약", k:"인테리어"},
-  {n:"중도금 지급", k:"자금"},
-  {n:"대출 승인 통보", k:"대출"},
-  {n:"잔금 지급 · 소유권이전등기", k:"자금"},
-  {n:"인테리어 착공", k:"인테리어"},
-  {n:"인테리어 준공 · 검수", k:"인테리어"},
-  {n:"이사", k:"이사"},
-  {n:"전입신고 · 확정일자", k:"행정"},
-  {n:"취득세 신고 · 납부", k:"행정"}
-];
-
-const CHECKLIST = ["신분증","주민등록등본 (세대원 포함)","가족관계증명서","소득금액증명원 2개년",
-  "원천징수영수증 2개년","건강보험 자격득실확인서","재직증명서","매매계약서 사본",
-  "계약금 이체 확인증","등기부등본","차용증 (가족 차용분)","증여 관련 이체 내역"];
-
-const CATS = ["자금","대출","인테리어","행정","이사","기타"];
-
 const $ = id => document.getElementById(id);
-const KEYS = ["name","price","kb","ltv","cap","room","pre","down","mid","d_pre","d_down","d_mid","d_final",
-  "rate","big","exempt","reno","others","buffer","inc1","inc2","dti","mrate","myears","crate","low","high"];
-const MAP = {name:"i_name",price:"i_price",kb:"i_kb",ltv:"i_ltv",cap:"i_cap",room:"i_room",pre:"i_pre",
-  down:"i_down",mid:"i_mid",d_pre:"d_pre",d_down:"d_down",d_mid:"d_mid",d_final:"d_final",rate:"i_rate",
-  big:"i_big",exempt:"i_exempt",reno:"i_reno",others:"i_others",buffer:"i_buffer",inc1:"i_inc1",inc2:"i_inc2",
-  dti:"i_dti",mrate:"i_mrate",myears:"i_myears",crate:"i_crate",low:"i_low",high:"i_high"};
+const KEYS = ["name","price","down","mid","d_down","d_mid","d_final","rate","big","exempt","reno","others","buffer"];
+const MAP = {name:"i_name",price:"i_price",down:"i_down",mid:"i_mid",d_down:"d_down",d_mid:"d_mid",
+  d_final:"d_final",rate:"i_rate",big:"i_big",exempt:"i_exempt",reno:"i_reno",others:"i_others",buffer:"i_buffer"};
 
-/* ── 유틸 ───────────────────────────────────────── */
 const won = n => (Math.round(n)||0).toLocaleString("ko-KR") + "원";
 function kr(n){
   n = Math.round(n)||0; if(!n) return "0원";
-  const sign = n<0 ? "−" : ""; n = Math.abs(n);
+  const sign = n<0?"−":""; n = Math.abs(n);
   const eok = Math.floor(n/100000000), man = Math.floor((n%100000000)/10000), rest = n%10000;
   let s = "";
   if(eok) s += eok+"억 ";
@@ -507,433 +365,229 @@ function kr(n){
   return sign + s.trim() + "원";
 }
 const esc = s => String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const num = id => { const v = parseFloat($(id).value); return isNaN(v) ? 0 : v; };
-function dday(ds){
-  if(!ds) return null;
-  const t = new Date(ds+"T00:00:00"); if(isNaN(t)) return null;
-  const now = new Date(); now.setHours(0,0,0,0);
-  return Math.round((t-now)/86400000);
-}
+const num = id => { const v = parseFloat($(id).value); return isNaN(v)?0:v; };
+function dday(ds){ if(!ds) return null; const t=new Date(ds+"T00:00:00"); if(isNaN(t)) return null;
+  const n=new Date(); n.setHours(0,0,0,0); return Math.round((t-n)/86400000); }
 const fmtDay = ds => ds ? ds.replace(/-/g,".") : "미정";
-function addDays(ds,n){
-  if(!ds) return "";
-  const t = new Date(ds+"T00:00:00"); if(isNaN(t)) return "";
-  t.setDate(t.getDate()+n);
-  return t.toISOString().slice(0,10);
-}
-const ddText = d => d===null ? "" : d>0 ? "D-"+d : d===0 ? "D-DAY" : "지남";
-const ddCls = d => d===null ? "far" : d<0 ? "far" : d<=7 ? "soon" : d<=30 ? "near" : "far";
+const ddText = d => d===null?"":d>0?"D-"+d:d===0?"D-DAY":"지남";
+const ddCls = d => d===null?"far":d<0?"far":d<=7?"soon":d<=30?"near":"far";
+const segClass = k => k==="증여"?"seg-gift":k==="차용"?"seg-borrow":k==="대출"?"seg-loan":"seg-own";
 
-/* ── 자기자금 행 ─────────────────────────────────── */
+/* 자금 출처 행 */
 function addFund(f){
-  f = f || {n:"",a:"",k:"본인",m:""};
+  f = f || {n:"",k:"본인",c:"",m:"",j:"",risk:false,memo:""};
   const tr = document.createElement("tr");
   tr.innerHTML =
-    '<td><input type="text" class="fn" value="'+esc(f.n)+'" placeholder="예: 어머니 증여"></td>'+
-    '<td><input type="number" class="fa mono" step="1000000" value="'+(f.a||"")+'" placeholder="0"></td>'+
-    '<td><select class="fk">'+["본인","증여","차용"].map(o=>'<option'+(o===f.k?" selected":"")+'>'+o+'</option>').join("")+'</select></td>'+
-    '<td><input type="text" class="fm" value="'+esc(f.m)+'" placeholder="조건 · 계산 근거"></td>'+
-    '<td><button class="del" title="삭제" aria-label="자금 항목 삭제">&times;</button></td>';
+    '<td><input type="text" class="fn" value="'+esc(f.n)+'" placeholder="예: 엄마 / 보증금"></td>'+
+    '<td><select class="fk">'+["본인","증여","차용","대출"].map(o=>'<option'+(o===f.k?" selected":"")+'>'+o+'</option>').join("")+'</select></td>'+
+    '<td><input type="number" class="fc mono" step="1000000" value="'+(f.c||"")+'" placeholder="0"></td>'+
+    '<td><input type="number" class="fm mono" step="1000000" value="'+(f.m||"")+'" placeholder="0"></td>'+
+    '<td><input type="number" class="fj mono" step="1000000" value="'+(f.j||"")+'" placeholder="0"></td>'+
+    '<td class="tot" data-tot>0원</td>'+
+    '<td class="risk-td"><input type="checkbox" class="fr"'+(f.risk?" checked":"")+' title="확정되지 않은 자금"></td>'+
+    '<td><input type="text" class="fmemo" value="'+esc(f.memo)+'" placeholder="차용증 작성 / 10월 해지 / 집주인 협의 등"></td>'+
+    '<td><button class="del" title="삭제" aria-label="출처 삭제">&times;</button></td>';
   tr.querySelector(".del").onclick = ()=>{ tr.remove(); calc(); };
   tr.querySelectorAll("input,select").forEach(el=>el.addEventListener("input",calc));
   $("fundRows").appendChild(tr);
 }
-const readFunds = () => [...$("fundRows").querySelectorAll("tr")].map(tr=>({
-  n: tr.querySelector(".fn").value.trim(),
-  a: parseFloat(tr.querySelector(".fa").value)||0,
-  k: tr.querySelector(".fk").value,
-  m: tr.querySelector(".fm").value.trim()
-})).filter(f=>f.n||f.a);
-
-/* ── 특약 ───────────────────────────────────────── */
-let clauses = [];
-function renderClauses(){
-  const box = $("clauseList");
-  if(!clauses.length){
-    box.innerHTML = '<div class="empty-msg">특약이 없습니다. 기본 문구를 불러오거나 직접 추가하세요.</div>';
-  } else {
-    box.innerHTML = clauses.map((c,i)=>
-      '<div class="cl'+(c.on?" done":"")+'">'+
-        '<input type="checkbox" data-ci="'+i+'"'+(c.on?" checked":"")+' aria-label="특약 반영 확인">'+
-        '<div class="cl-body">'+
-          '<textarea class="cl-text" data-ct="'+i+'" rows="2" placeholder="특약 문구를 적으세요">'+esc(c.t)+'</textarea>'+
-          '<div class="cl-meta"><span class="pill">'+esc(c.g||"기타")+'</span>'+
-          '<button class="del no-print" data-cd="'+i+'" title="삭제" aria-label="특약 삭제">&times;</button></div>'+
-        '</div></div>').join("");
-    box.querySelectorAll("[data-ci]").forEach(el=>el.onchange=e=>{ clauses[+e.target.dataset.ci].on=e.target.checked; renderClauses(); updateBoard(); });
-    box.querySelectorAll("[data-ct]").forEach(el=>el.oninput=e=>{ clauses[+e.target.dataset.ct].t=e.target.value; });
-    box.querySelectorAll("[data-cd]").forEach(el=>el.onclick=e=>{ clauses.splice(+e.target.dataset.cd,1); renderClauses(); updateBoard(); });
-  }
-  updateBoard();
-}
-
-/* ── 일정 ───────────────────────────────────────── */
-let events = [];
-function renderEvents(){
-  const tb = $("eventRows");
-  tb.innerHTML = events.map((e,i)=>
-    '<tr>'+
-    '<td><input type="text" data-en="'+i+'" value="'+esc(e.n)+'" placeholder="예: 인테리어 착공"></td>'+
-    '<td><input type="date" data-ed="'+i+'" value="'+(e.d||"")+'"></td>'+
-    '<td><select data-ek="'+i+'">'+CATS.map(c=>'<option'+(c===e.k?" selected":"")+'>'+c+'</option>').join("")+'</select></td>'+
-    '<td><input type="text" data-em="'+i+'" value="'+esc(e.m||"")+'" placeholder="메모"></td>'+
-    '<td style="text-align:center"><input type="checkbox" data-ec="'+i+'"'+(e.done?" checked":"")+' style="width:17px;height:17px;accent-color:var(--cheong)" aria-label="완료"></td>'+
-    '<td><button class="del" data-ex="'+i+'" title="삭제" aria-label="일정 삭제">&times;</button></td></tr>').join("");
-  tb.querySelectorAll("[data-en]").forEach(el=>el.oninput=e=>{events[+e.target.dataset.en].n=e.target.value; drawTimeline();});
-  tb.querySelectorAll("[data-ed]").forEach(el=>el.oninput=e=>{events[+e.target.dataset.ed].d=e.target.value; drawTimeline();});
-  tb.querySelectorAll("[data-ek]").forEach(el=>el.onchange=e=>{events[+e.target.dataset.ek].k=e.target.value; drawTimeline();});
-  tb.querySelectorAll("[data-em]").forEach(el=>el.oninput=e=>{events[+e.target.dataset.em].m=e.target.value; drawTimeline();});
-  tb.querySelectorAll("[data-ec]").forEach(el=>el.onchange=e=>{events[+e.target.dataset.ec].done=e.target.checked; drawTimeline();});
-  tb.querySelectorAll("[data-ex]").forEach(el=>el.onclick=e=>{events.splice(+e.target.dataset.ex,1); renderEvents(); drawTimeline();});
-  drawTimeline();
-}
-
-function drawTimeline(){
-  const list = events.map((e,i)=>({...e,i})).filter(e=>e.n || e.d);
-  list.sort((a,b)=>{
-    if(!a.d && !b.d) return a.i-b.i;
-    if(!a.d) return 1;
-    if(!b.d) return -1;
-    return a.d.localeCompare(b.d);
+function readFunds(){
+  return [...$("fundRows").querySelectorAll("tr")].map(tr=>{
+    const g = s => parseFloat(tr.querySelector(s).value)||0;
+    return { n:tr.querySelector(".fn").value.trim(), k:tr.querySelector(".fk").value,
+      c:g(".fc"), m:g(".fm"), j:g(".fj"), risk:tr.querySelector(".fr").checked,
+      memo:tr.querySelector(".fmemo").value.trim(), _tot:tr.querySelector("[data-tot]") };
   });
-  const tl = $("timeline");
-  if(!list.length){
-    tl.innerHTML = '<div class="empty-msg" style="margin-left:-11px">일정이 없습니다. 기본 일정을 불러오거나 직접 추가하세요.</div>';
-  } else {
-    tl.innerHTML = list.map(e=>{
-      const d = dday(e.d), past = e.done || (d!==null && d<0);
-      return '<div class="tl k-'+esc(e.k||"기타")+(past?" past":"")+'">'+
-        '<div class="tl-in">'+
-          '<span class="tl-date">'+fmtDay(e.d)+'</span>'+
-          '<span class="tl-cat">'+esc(e.k||"기타")+'</span>'+
-          '<span class="tl-name">'+esc(e.n||"이름 없음")+'</span>'+
-          (e.done ? '<span class="tl-dd far">완료</span>' : '<span class="tl-dd '+ddCls(d)+'">'+ddText(d)+'</span>')+
-        '</div>'+
-        (e.m ? '<div class="tl-memo">'+esc(e.m)+'</div>' : '')+
-      '</div>';
-    }).join("");
-  }
-
-  /* 법정 기한 */
-  const fin = $("d_final").value;
-  const chips = [];
-  if(fin){
-    const tax = addDays(fin,60), td = dday(tax);
-    chips.push('<div class="dl-chip"><b>취득세 신고 · 납부 기한</b><div class="d mono">'+fmtDay(tax)+' <span class="tl-dd '+ddCls(td)+'">'+ddText(td)+'</span></div><div style="color:var(--ink-3)">잔금일(취득일)로부터 60일 이내</div></div>');
-    chips.push('<div class="dl-chip"><b>인테리어 착공 가능 시점</b><div class="d mono">'+fmtDay(fin)+'</div><div style="color:var(--ink-3)">소유권 이전 전 착공은 매도인 서면 동의 필요</div></div>');
-  }
-  const moveEv = events.find(e=>e.k==="이사" && e.d);
-  if(moveEv){
-    const rep = addDays(moveEv.d,14), rd = dday(rep);
-    chips.push('<div class="dl-chip"><b>전입신고 기한</b><div class="d mono">'+fmtDay(rep)+' <span class="tl-dd '+ddCls(rd)+'">'+ddText(rd)+'</span></div><div style="color:var(--ink-3)">전입한 날부터 14일 이내</div></div>');
-  }
-  $("deadlines").innerHTML = chips.join("");
-  updateBoard();
 }
 
-/* ── 취득세 · 상환액 ────────────────────────────── */
 function acqRate(price,big){
   let base;
-  if(price<=600000000) base = 1;
-  else if(price<=900000000) base = Math.round((price/100000000*2/3-3)*100)/100;
-  else base = 3;
-  return Math.round((base + base*0.1 + (big?0.2:0))*100)/100;
-}
-function pmt(P,annual,years){
-  if(!P||!years) return 0;
-  const r = annual/100/12, n = years*12;
-  return r===0 ? P/n : P*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);
+  if(price<=600000000) base=1;
+  else if(price<=900000000) base=Math.round((price/100000000*2/3-3)*100)/100;
+  else base=3;
+  return Math.round((base+base*0.1+(big?0.2:0))*100)/100;
 }
 
-/* ── 상황판 갱신 ────────────────────────────────── */
-let LAST = {};
-function updateBoard(){
-  const done = clauses.filter(c=>c.on).length;
-  $("bClause").textContent = done + " / " + clauses.length;
-  $("bClauseBar").style.width = clauses.length ? (done/clauses.length*100)+"%" : "0%";
-  const rest = clauses.filter(c=>!c.on).slice(0,2);
-  $("bClauseList").innerHTML = clauses.length
-    ? (rest.length ? rest.map(c=>'<li>'+esc(c.t.slice(0,34))+(c.t.length>34?"…":"")+'</li>').join("") : '<li>전부 확인했습니다</li>')
-    : '<li>기본 문구를 불러오세요</li>';
-
-  const up = events.filter(e=>e.d && !e.done && dday(e.d)!==null && dday(e.d)>=0)
-                   .sort((a,b)=>a.d.localeCompare(b.d))[0];
-  if(up){
-    const d = dday(up.d);
-    $("bNext").textContent = up.n || "이름 없는 일정";
-    $("bNextSub").textContent = fmtDay(up.d) + " · " + ddText(d) + " · " + (up.k||"기타");
-  } else {
-    $("bNext").textContent = events.length ? "남은 일정 없음" : "일정 없음";
-    $("bNextSub").textContent = events.length ? "날짜를 넣으면 여기 표시됩니다" : "기본 일정을 불러오세요";
-  }
-
-  const fd = dday($("d_final").value);
-  $("bDday").textContent = fd===null ? "-" : ddText(fd);
-  $("bDdaySub").textContent = $("d_final").value
-    ? fmtDay($("d_final").value) + " 잔금 " + (LAST.final ? won(LAST.final) : "")
-    : "잔금일을 입력하세요";
-}
-
-/* ── 메인 계산 ──────────────────────────────────── */
 function calc(){
-  const price=num("i_price"), kb=num("i_kb"), ltv=num("i_ltv"), cap=num("i_cap"), room=num("i_room");
-  const pre=num("i_pre"), down=num("i_down"), mid=num("i_mid");
-  const downRest = Math.max(0, down-pre);
-  const final = Math.max(0, price-pre-downRest-mid);
-  $("i_final").value = final || "";
+  const price=num("i_price"), downTot=num("i_down"), mid=num("i_mid");
+  const final=Math.max(0,price-downTot-mid);
+  $("i_final").value = final||"";
 
-  const ltvAmt = Math.floor(kb*ltv/100);
-  const loan = Math.max(0, (cap>0 ? Math.min(ltvAmt,cap) : ltvAmt) - room);
-  $("i_loan").value = loan || "";
+  const funds = readFunds().filter(f=>f.n||f.c||f.m||f.j);
+  funds.forEach(f=>{ if(f._tot) f._tot.textContent = won(f.c+f.m+f.j); });
 
-  const funds = readFunds();
-  const ownSum = funds.reduce((s,f)=>s+f.a,0);
-  const secured = ownSum + loan;
-  const need = Math.max(0, price - secured);
+  const sumC=funds.reduce((s,f)=>s+f.c,0);
+  const sumM=funds.reduce((s,f)=>s+f.m,0);
+  const sumJ=funds.reduce((s,f)=>s+f.j,0);
+  const provided=sumC+sumM+sumJ;
 
-  const rate = $("i_rate").value.trim() ? parseFloat($("i_rate").value) : acqRate(price,$("i_big").checked);
-  const acqBefore = Math.round(price*rate/100);
+  const rate=$("i_rate").value.trim()?parseFloat($("i_rate").value):acqRate(price,$("i_big").checked);
+  const acqBefore=Math.round(price*rate/100);
   const exempt=num("i_exempt"), reno=num("i_reno"), others=num("i_others"), buffer=num("i_buffer");
-  const acqAfter = Math.max(0, acqBefore-exempt);
-  const target = need + acqAfter + reno + others + buffer;
+  const acqAfter=Math.max(0,acqBefore-exempt);
+  const extra=acqAfter+reno+others+buffer;
+  const need=price+extra;
+  const diff=provided-need;
 
-  const inc1=num("i_inc1"), inc2=num("i_inc2");
-  const incAvg = (inc1&&inc2) ? Math.round((inc1+inc2)/2) : (inc1||inc2);
-  $("i_incavg").value = incAvg || "";
-  const low = Math.round(incAvg*num("i_low")/1000000)*1000000;
-  const high = Math.round(incAvg*num("i_high")/1000000)*1000000;
+  document.querySelectorAll("[data-krw]").forEach(el=>{const v=num(el.dataset.krw); el.textContent=v?kr(v):"";});
 
-  document.querySelectorAll("[data-krw]").forEach(el=>{
-    const v = num(el.dataset.krw); el.textContent = v ? kr(v) : "";
-  });
-
-  LAST = {final};
-
-  /* 히어로 */
-  $("heroName").textContent = $("i_name").value.trim() || "매수 주택 미입력";
-  $("heroTotal").firstChild.nodeValue = won(price);
-  $("heroTotalKr").textContent = price ? "매매대금 · " + kr(price) : "매매대금을 입력하면 계산이 시작됩니다";
-  $("heroStamp").textContent = new Date().toLocaleDateString("ko-KR",{year:"numeric",month:"long",day:"numeric"}) + " 기준";
-  $("bGap").textContent = won(need);
-  $("bGapSub").textContent = price
-    ? "매매대금 " + kr(price) + " − 확정 자금 " + kr(secured)
-    : "매매대금을 입력하세요";
+  /* 상단 */
+  $("heroName").textContent=$("i_name").value.trim()||"단지명 미입력";
+  $("heroStamp").textContent=new Date().toLocaleDateString("ko-KR",{year:"numeric",month:"long",day:"numeric"})+" 기준";
+  $("gNeed").textContent=kr(need);
+  $("gNeedSub").textContent = price?("매매 "+kr(price)+(extra?" + 부대 "+kr(extra):"")):"매매대금을 입력하세요";
+  $("gHave").textContent=kr(provided);
+  $("gHaveSub").textContent="계약금 "+kr(sumC)+" · 중도금 "+kr(sumM)+" · 잔금 "+kr(sumJ);
+  const dc=$("gDiff"); dc.textContent=(diff>=0?"+":"")+kr(diff).replace("−","-");
+  dc.className="n mono "+(diff>=0?"pos":"neg");
+  $("gDiffSub").textContent = diff>=0?"조달이 필요액을 채웁니다":kr(-diff)+" 모자랍니다";
 
   /* 흐름 바 */
-  const segs = [];
-  funds.forEach(f=>f.a>0 && segs.push({v:f.a,c:f.k==="증여"?"seg-gift":f.k==="차용"?"seg-borrow":"seg-own",t:f.n||f.k}));
-  if(loan>0) segs.push({v:loan,c:"seg-mortgage",t:"주택담보대출"});
-  if(need>0) segs.push({v:need,c:"seg-gap",t:"신용대출 "+kr(need)});
-  const fb = $("flowbar"), tot = segs.reduce((s,x)=>s+x.v,0);
-  if(!tot){
-    fb.className = "flowbar empty";
-    fb.textContent = "매매대금과 자기자금을 넣으면 여기에 자금 구성이 그려집니다";
-  } else {
-    fb.className = "flowbar";
-    fb.innerHTML = segs.map(s=>'<div class="seg '+s.c+'" style="flex:'+s.v+' 1 0" data-show="'+
-      (s.v/tot*100>11?1:0)+'" title="'+esc(s.t)+' '+won(s.v)+'"><span>'+esc(s.t)+'</span></div>').join("");
-  }
+  const segs=[];
+  funds.forEach(f=>{const t=f.c+f.m+f.j; if(t>0) segs.push({v:t,c:segClass(f.k),t:f.n||f.k});});
+  const shortM=Math.max(0,need-provided);
+  if(shortM>0) segs.push({v:shortM,c:"seg-gap",t:"모자란 "+kr(shortM)});
+  const fb=$("flowbar"), tot=segs.reduce((s,x)=>s+x.v,0);
+  if(!tot){ fb.className="flowbar empty"; fb.textContent="매매대금과 자금 출처를 넣으면 자금 구성이 그려집니다"; }
+  else{ fb.className="flowbar"; fb.innerHTML=segs.map(s=>'<div class="seg '+s.c+'" style="flex:'+s.v+' 1 0" data-show="'+
+    (s.v/tot*100>10?1:0)+'" title="'+esc(s.t)+' '+won(s.v)+'"><span>'+esc(s.t)+'</span></div>').join(""); }
 
-  /* 지급 배분 */
-  const pool = funds.map(f=>({...f,left:f.a}));
-  function take(amount){
-    const used=[];
-    for(const p of pool){
-      if(amount<=0) break;
-      if(p.left<=0) continue;
-      const t=Math.min(p.left,amount); p.left-=t; amount-=t;
-      used.push((p.n||p.k)+" "+kr(t));
-    }
-    return used.join(" + ");
-  }
-  const a1=take(pre), a2=take(downRest), a3=take(mid);
-  const leftOwn = pool.reduce((s,p)=>s+p.left,0);
-  const fparts=[];
-  if(loan>0) fparts.push("주택담보대출 "+kr(loan));
-  if(leftOwn>0) fparts.push(take(leftOwn));
-  if(need>0) fparts.push("신용대출 "+kr(need));
+  /* 단계 카드 */
+  const stg=[
+    {name:"계약금",need:downTot,have:sumC,date:$("d_down").value},
+    {name:"중도금",need:mid,have:sumM,date:$("d_mid").value},
+    {name:"잔금",need:final,have:sumJ,date:$("d_final").value}
+  ];
+  $("stages").innerHTML=stg.map(s=>{
+    const gap=s.need-s.have, pct=s.need?Math.min(100,s.have/s.need*100):0, d=dday(s.date);
+    return '<div class="stage'+(gap>0?" gap":"")+'">'+
+      '<div class="st-h"><b>'+s.name+'</b><span class="st-dd '+ddCls(d)+'">'+fmtDay(s.date)+' '+ddText(d)+'</span></div>'+
+      '<div class="need mono">'+won(s.need)+'</div>'+
+      '<div class="line"><span>배정</span><span class="v">'+won(s.have)+'</span></div>'+
+      '<div class="bar"><i style="width:'+pct+'%"></i></div>'+
+      '<div class="line"><span>'+(gap>0?'<span class="tag-gap">모자람</span>':gap<0?'남음':'<span class="tag-ok">맞음</span>')+
+        '</span><span class="v">'+(gap>0?won(gap):gap<0?"+"+won(-gap):"0원")+'</span></div>'+
+    '</div>';
+  }).join("");
 
-  const row=(n,a,memo,how,cls)=>'<tr'+(cls==="sum"?' class="sum"':'')+'><td>'+esc(n)+
-    '</td><td'+(cls==="gap"?' class="neg"':'')+'>'+won(a)+'</td><td>'+memo+'</td><td>'+how+'</td></tr>';
-  const block=(title,sub,rows)=>'<div class="tbl-block"><div class="tbl-cap"><h3>'+title+
-    '</h3><span>'+sub+'</span></div><div class="tscroll"><table class="data"><thead><tr><th>내용</th>'+
-    '<th style="text-align:right">금액</th><th>비고</th><th>마련 방법</th></tr></thead><tbody>'+rows+
-    '</tbody></table></div></div>';
+  /* 배정표 */
+  const cell=v=>v>0?won(v):'<span class="z">0원</span>';
+  let rows=funds.map(f=>'<tr'+(f.risk?' class="risk"':'')+'><td>'+esc(f.n||"이름 없음")+
+    '</td><td><span class="pill p-'+f.k+'">'+f.k+'</span></td><td>'+won(f.c+f.m+f.j)+
+    '</td><td>'+cell(f.c)+'</td><td>'+cell(f.m)+'</td><td>'+cell(f.j)+'</td></tr>').join("");
+  if(!funds.length) rows='<tr><td colspan="6"><div class="empty-msg" style="border:none;background:none">자금 출처를 입력하면 여기에 배정표가 만들어집니다</div></td></tr>';
+  const sumRow='<tr class="sum"><td>합계</td><td></td><td>'+won(provided)+'</td><td>'+won(sumC)+'</td><td>'+won(sumM)+'</td><td>'+won(sumJ)+'</td></tr>';
+  const needRow='<tr class="need"><td>단계별 필요액</td><td></td><td>'+won(need)+'</td><td>'+won(downTot)+'</td><td>'+won(mid)+'</td><td>'+won(final)+'</td></tr>';
+  const diffRow='<tr class="need"><td>차액 (배정 − 필요)</td><td></td><td>'+won(provided-price)+
+    '</td><td>'+won(sumC-downTot)+'</td><td>'+won(sumM-mid)+'</td><td>'+won(sumJ-final)+'</td></tr>';
+  $("allocBody").innerHTML=rows+sumRow+needRow+diffRow;
+  $("allocNote").innerHTML = extra>0
+    ? "위 배정표는 매매대금 "+won(price)+"만 다룹니다. 취득세·인테리어·부대비용 "+won(extra)+"은 매매대금 밖에서 따로 준비해야 하며, 위 자금 출처에 포함하려면 잔금 칸이 아니라 별도 항목으로 넣어 관리하세요."
+    : "취득세·부대비용을 입력하면 매매대금과 구분해 별도로 표시됩니다.";
 
-  let html = "";
-
-  html += block("매매계약 지급표","계약서상 실제로 지급하는 금액",
-    row("매수 주택", price, esc($("i_name").value.trim()||"단지명 미입력")+" · 매매대금 기준. 담보 평가액 "+won(kb), "아래 4개 항목으로 나누어 지급")+
-    row("가계약금", pre, "계약금 총액 "+won(down)+" 중 선지급분 · "+fmtDay($("d_pre").value), a1||"미배정")+
-    row("계약금 잔액", downRest, "계약금 총액 "+won(down)+" − 가계약금 "+won(pre)+" · "+fmtDay($("d_down").value), a2||"미배정")+
-    row("중도금", mid, "지급 예정일 "+fmtDay($("d_mid").value), a3||"미배정")+
-    row("잔금", final, "매매대금 − 가계약금 − 계약금 잔액 − 중도금 · "+fmtDay($("d_final").value), fparts.join(" + ")||"미배정")+
-    row("지급액 합계", pre+downRest+mid+final, won(pre)+" + "+won(downRest)+" + "+won(mid)+" + "+won(final), "—","sum"));
-
-  let r2 = funds.map(f=>row(f.n||f.k, f.a, esc(f.m||(f.k+" 자금")),
-    f.k==="증여"?"증여자 계좌 이체":f.k==="차용"?"차용증 작성 후 계좌 이체":"본인 예금")).join("");
-  if(!funds.length) r2 = row("자기자금 미입력", 0, "위 입력란에서 항목을 추가하세요", "—");
-  r2 += row("주택담보대출", loan,
-    "담보 평가액 "+won(kb)+" × LTV "+ltv+"% = "+won(ltvAmt)+
-    (cap>0 && ltvAmt>cap ? " → 한도 상한 "+won(cap)+" 적용" : "")+
-    (room ? " − 소액임차보증금 차감 "+won(room) : ""), "잔금일 실행 예정");
-  r2 += row("신용대출 필요액", need, "매매대금 "+won(price)+" − 확정 가능 자금 "+won(secured),
-    "은행 신용대출 (상담 예정)", need>0?"gap":"");
-  r2 += row("자금 합계", secured+need, "확정 가능 자금 "+won(secured)+" + 신용대출 "+won(need), "—","sum");
-  html += block("자금 마련표","매매대금을 채우는 돈의 출처", r2);
-
-  html += block("신용대출 필요액 산정표","얼마를, 왜 빌려야 하는지",
-    row("매매대금", price, "계약서상 총 지급액", "—")+
-    row("확정 가능 자금", secured, "자기자금 "+won(ownSum)+" + 주택담보대출 "+won(loan), "본인·가족 자금 + 주택담보대출")+
-    row("순수 매매대금 기준 신용대출 필요액", need, "매매대금 "+won(price)+" − 확정 가능 자금 "+won(secured), "은행 신용대출", need>0?"gap":"")+
-    row("취득세 감면 전 예상액", acqBefore, "매매대금 "+won(price)+" × "+rate+"% (취득세 + 지방교육세"+($("i_big").checked?" + 농어촌특별세":"")+")", "신용대출 또는 본인 자금")+
-    row("취득세 감면 후 예상 부담액", acqAfter, "감면 전 "+won(acqBefore)+" − 감면 "+won(exempt), "신용대출")+
-    (reno>0 ? row("인테리어 예산", reno, "잔금 이후 집행 예정", "신용대출 또는 본인 자금") : "")+
-    (others>0 ? row("기타 본인 부담 비용", others, "중개보수 · 법무사비 · 이사비 중 직접 낼 금액", "신용대출") : "")+
-    row("신용대출 상담 희망액", target,
-      "필요액 "+won(need)+" + 취득세 "+won(acqAfter)+(reno?" + 인테리어 "+won(reno):"")+
-      (others?" + 기타 "+won(others):"")+" + 예비비 "+won(buffer), "은행 신용대출","sum"));
-
-  let r4 = [["보수적 신용대출 예상액",low,num("i_low")],["긍정적 신용대출 예상액",high,num("i_high")]]
-    .map(([n,v,m])=>row(n,v,"2개년 평균소득 "+won(incAvg)+" × "+m,"은행 신용대출")).join("");
-  r4 += row("목표 신용대출액", target, "신용대출 상담 희망액과 동일", "은행 신용대출");
-  [["보수적",low],["긍정적",high],["목표액",target]].forEach(([lab,v])=>{
-    const g1=Math.max(0,need-v), g2=Math.max(0,target-v);
-    r4 += row(lab+" 예상 시 추가 부족액", g1,
-      "매매대금 기준 필요액 "+won(need)+" − 승인 예상액 "+won(v)+" (총비용 "+won(target)+" 기준으로는 "+won(g2)+")",
-      g1>0?"추가 가족 차용 · 잔금일 조정 · 보증금 회수":"추가 자금 불필요", g1>0?"gap":"");
+  /* 챙길 것 */
+  const todos=[];
+  funds.forEach((f,i)=>{
+    const items=[];
+    if(f.m>0) items.push({stage:"중도금",amt:f.m,date:$("d_mid").value});
+    if(f.j>0) items.push({stage:"잔금",amt:f.j,date:$("d_final").value});
+    items.forEach(it=>todos.push({...it,name:f.n||f.k,memo:f.memo,risk:f.risk,key:i+it.stage}));
   });
-  html += block("신용대출 가능성별 결과표","승인액에 따라 남는 구멍", r4);
+  todos.sort((a,b)=>{ const da=dday(a.date),db=dday(b.date);
+    if(da===null&&db===null) return 0; if(da===null) return 1; if(db===null) return -1; return da-db; });
+  $("todos").innerHTML = todos.length ? todos.map(t=>{
+    const d=dday(t.date), done=TODO_DONE.has(t.key);
+    return '<div class="todo'+(t.risk?" risk":"")+(done?" done":"")+'">'+
+      '<input type="checkbox" data-todo="'+t.key+'"'+(done?" checked":"")+' aria-label="완료 체크">'+
+      '<div class="todo-body"><div class="todo-top">'+
+        '<span class="todo-name">'+esc(t.name)+'</span>'+
+        '<span class="todo-amt">'+won(t.amt)+'</span>'+
+        '<span class="todo-when '+t.stage+'">'+t.stage+' '+fmtDay(t.date)+(d===null?"":" · "+ddText(d))+'</span>'+
+        (t.risk?'<span class="risk-flag">미확정</span>':'')+
+      '</div>'+(t.memo?'<div class="todo-memo">'+esc(t.memo)+'</div>':'')+'</div></div>';
+  }).join("") : '<div class="empty-msg">중도금·잔금 칸에 금액을 넣으면 처리할 항목이 여기 모입니다.</div>';
+  $("todos").querySelectorAll("[data-todo]").forEach(el=>el.onchange=e=>{
+    const k=e.target.dataset.todo; e.target.checked?TODO_DONE.add(k):TODO_DONE.delete(k);
+    e.target.closest(".todo").classList.toggle("done",e.target.checked);
+  });
 
-  html += block("소득 정리표","심사 기준 소득",
-    row("직전년도 인정소득", inc1, "소득금액증명 기준", "소득금액증명 · 원천징수영수증 제출")+
-    row("전전년도 인정소득", inc2, "소득금액증명 기준", "소득금액증명 제출")+
-    row("최근 2개년 평균소득", incAvg, "("+won(inc1)+" + "+won(inc2)+") ÷ 2", "대출 심사 기준 소득","sum"));
-
-  $("tables").innerHTML = html;
-
-  renderChecks({price,kb,loan,ltvAmt,cap,room,need,target,incAvg,funds,ownSum,pre,downRest,mid,final,acqAfter,reno});
-  updateBoard();
+  renderChecks({price,downTot,mid,final,sumC,sumM,sumJ,provided,need,extra,acqAfter,reno,funds,diff});
 }
 
-/* ── 자동 점검 ──────────────────────────────────── */
+const TODO_DONE = new Set();
+
 function renderChecks(d){
   const c=[];
   const card=(lv,t,txt)=>c.push('<div class="chk-card '+lv+'"><b><span class="tag">'+
     (lv==="ok"?"확인":lv==="warn"?"주의":"위험")+'</span>'+t+'</b><p>'+txt+'</p></div>');
+  if(!d.price){ card("warn","매매대금이 비어 있습니다","매매대금과 자금 출처를 넣으면 단계별로 얼마가 남는지 자동으로 계산됩니다."); $("checks").innerHTML=c.join(""); return; }
 
-  if(!d.price){ card("warn","매매대금이 비어 있습니다","위 입력란에 숫자를 넣으면 자금 구멍과 취득세, 상환 여력이 함께 계산됩니다."); $("checks").innerHTML=c.join(""); return; }
+  [["계약금",d.downTot,d.sumC],["중도금",d.mid,d.sumM],["잔금",d.final,d.sumJ]].forEach(([n,need,have])=>{
+    const g=need-have;
+    if(g>0) card("bad",n+" 배정이 "+kr(g)+" 모자랍니다",
+      n+" 필요 "+won(need)+" 중 "+won(have)+"만 배정됐습니다. 이 단계에 넣을 자금 출처를 더 지정하거나 금액을 옮기세요.");
+    else if(g<0) card("warn",n+"에 "+kr(-g)+"이 남습니다",
+      n+" 필요 "+won(need)+"보다 "+won(-g)+" 많이 배정됐습니다. 다른 단계로 옮기면 조달이 수월해집니다.");
+  });
 
-  if(d.room>0) card("bad","소액임차보증금이 차감되고 있습니다",
-    "차감액 "+kr(d.room)+"만큼 대출이 줄어 신용대출 필요액이 그만큼 늘어납니다. 구입자금보증으로 차감을 피할 수 있는지 은행에 확인하세요.");
-  else if(d.loan>0) card("ok","소액임차보증금 차감 없음으로 계산했습니다",
-    "구입자금보증 이용을 전제로 한 금액입니다. 보증이 안 되면 지역별 최우선변제금만큼 대출이 줄어듭니다.");
+  const riskSum=d.funds.filter(f=>f.risk).reduce((s,f)=>s+f.c+f.m+f.j,0);
+  if(riskSum>0) card("bad","미확정 자금 "+kr(riskSum)+"이 조달의 단일 실패지점입니다",
+    "신용대출을 잔금일에 실행할 수 없는 구조라 이 금액이 예상보다 적게 들어오면 곧바로 잔금이 빕니다. 확정 전까지는 같은 규모의 대체 자금(추가 차용·예비 현금)을 미리 확보해 두세요.");
 
-  if(d.cap>0 && d.ltvAmt>d.cap) card("warn","LTV 계산액이 한도 상한을 넘습니다",
-    "LTV 기준 "+kr(d.ltvAmt)+"이지만 상한 "+kr(d.cap)+"이 적용됩니다. 상한 금액이 맞는지 상품 공고를 확인하세요.");
-
-  if(d.price>600000000 || d.kb>600000000) card("warn","주택가격이 6억 원을 넘습니다",
-    "정책 주택담보대출은 매매가·시세·감정가 중 하나라도 기준을 넘으면 취급이 막힐 수 있습니다. 자격 요건을 먼저 확인하세요.");
-
-  const capY = d.incAvg*num("i_dti")/100;
-  if(d.incAvg>0 && d.loan>0){
-    const mY = pmt(d.loan,num("i_mrate"),num("i_myears"))*12;
-    const cI = d.target*num("i_crate")/100;
-    const room = capY-(mY+cI);
-    card(room>=0 ? (room>capY*0.15?"ok":"warn") : "bad",
-      "상환 여력 " + (room>=0 ? "여유 "+kr(room) : "초과 "+kr(-room)),
-      "소득 "+won(d.incAvg)+" × "+num("i_dti")+"% = 연 "+won(capY)+" 허용. 주택담보대출 "+won(d.loan)+"을 "+
-      num("i_myears")+"년 만기 금리 "+num("i_mrate")+"%로 잡으면 연 원리금 "+won(mY)+"(월 "+won(mY/12)+
-      "), 신용대출 "+won(d.target)+"의 연 이자는 "+won(cI)+"입니다. 신용대출을 원리금으로 반영하는 은행도 있으니 산정 방식을 물어보세요.");
-  }
-
-  const beforeFinal = d.pre+d.downRest+d.mid;
-  if(beforeFinal>0) card(d.ownSum>=beforeFinal?"ok":"bad",
-    d.ownSum>=beforeFinal ? "잔금 전 지급액은 자기자금으로 감당됩니다" : "잔금 전 지급액이 자기자금보다 큽니다",
-    "잔금 전에 나가는 돈 "+won(beforeFinal)+", 자기자금 "+won(d.ownSum)+" · "+
-    (d.ownSum>=beforeFinal ? "잔금에 쓸 수 있는 자기자금이 "+kr(d.ownSum-beforeFinal)+" 남습니다."
-      : kr(beforeFinal-d.ownSum)+"이 중도금 시점에 부족합니다. 일정을 늦추거나 자금을 앞당기세요."));
-
-  const borrow = d.funds.filter(f=>f.k==="차용").reduce((s,f)=>s+f.a,0);
+  const borrow=d.funds.filter(f=>f.k==="차용").reduce((s,f)=>s+f.c+f.m+f.j,0);
   if(borrow>0) card("warn","가족 차용 "+kr(borrow)+"은 서류가 핵심입니다",
-    "차용증만으로는 증여로 볼 여지가 있습니다. 이자율과 상환일을 적고 실제 이자 이체 기록을 남기세요. 증여 공제 적용 여부는 세무사 확인이 필요합니다.");
+    "차용증에 이자율과 상환일을 적고 실제 이자 이체 기록을 남기세요. 서류가 부실하면 증여로 보아 증여세가 붙을 수 있습니다. 공제 적용 여부는 세무사 확인이 필요합니다.");
+  const gift=d.funds.filter(f=>f.k==="증여").reduce((s,f)=>s+f.c+f.m+f.j,0);
+  if(gift>0) card("warn","증여 "+kr(gift)+"은 신고와 이체 기록을 남기세요",
+    "직계존속 증여공제 한도와 신고 기한을 확인하고, 증여자 계좌에서 직접 이체한 내역을 보관하세요. 한도 초과분은 증여세 대상입니다.");
 
-  if(d.acqAfter>0) card("warn","취득세 "+kr(d.acqAfter)+"은 잔금일 전후로 현금이 나갑니다",
-    "감면은 소득·주택가격 요건이 붙습니다. 감면이 안 되면 부담액이 늘어나니 관할 구청에 잔금일 기준 규정을 확인하세요.");
+  if(d.acqAfter>0) card(d.diff>=0?"warn":"bad","취득세 "+kr(d.acqAfter)+"은 매매대금 밖에서 나갑니다",
+    "잔금일 전후로 현금이 필요하고, 잔금일(취득일)로부터 60일 이내에 신고·납부해야 합니다. "+
+    (d.diff<0?"현재 조달로는 이 금액이 채워지지 않으니 조달원을 지정하세요.":"조달에 여유가 있어 충당 가능합니다."));
+  if(d.reno>0) card("warn","인테리어 "+kr(d.reno)+"은 잔금 이후 집행을 권합니다",
+    "잔금 전에는 소유권이 없어 공사를 하려면 매도인의 서면 동의가 필요하고, 계약이 깨질 경우 원상복구 책임이 생깁니다. 실측만 미리 하세요.");
 
-  /* 인테리어 일정 점검 */
-  const fin = $("d_final").value;
-  const reno = events.find(e=>e.k==="인테리어" && /착공|시공|공사/.test(e.n) && e.d);
-  if(fin && reno && reno.d < fin) card("bad","인테리어 착공일이 잔금일보다 앞섭니다",
-    "착공 "+fmtDay(reno.d)+", 잔금 "+fmtDay(fin)+". 잔금 전에는 소유권이 없어 공사를 하려면 매도인의 서면 동의가 필요하고, 계약이 깨질 경우 원상복구 책임이 생깁니다.");
-  const move = events.find(e=>e.k==="이사" && e.d);
-  if(fin && move && move.d < fin) card("warn","이사일이 잔금일보다 앞섭니다",
-    "이사 "+fmtDay(move.d)+", 잔금 "+fmtDay(fin)+". 매도인 협조와 짐 보관 계획을 먼저 정하세요.");
-  if(d.reno>0 && !events.some(e=>e.k==="인테리어" && e.d)) card("warn","인테리어 예산은 있는데 일정이 비어 있습니다",
-    "예산 "+kr(d.reno)+"을 잡아두셨습니다. 실측과 착공, 준공 날짜를 넣으면 잔금·이사 일정과 겹치는지 자동으로 확인합니다.");
+  card(d.diff>=0?"ok":"bad",
+    d.diff>=0?"총 조달이 총 필요액을 채웁니다":"총 "+kr(-d.diff)+"이 모자랍니다",
+    d.diff>=0?"매매대금과 부대비용까지 계산상 맞춰집니다. 미확정 자금이 실제로 들어오는지만 확인하면 됩니다."
+             :"필요 "+won(d.need)+" 대비 조달 "+won(d.provided)+". 부족분을 채울 자금 출처를 추가하거나 예산을 줄이세요.");
 
-  card(d.need>0?"bad":"ok",
-    d.need>0 ? "신용대출 "+kr(d.need)+"이 매매대금을 맞추는 데 필요합니다"
-             : "자기자금과 주택담보대출로 매매대금이 맞춰집니다",
-    d.need>0 ? "취득세와 인테리어까지 고려하면 "+kr(d.target)+" 상담이 필요합니다. 주택담보대출 심사 전에 신용대출 한도를 먼저 확인하세요."
-             : "신용대출 없이 지급이 가능합니다. 취득세 "+kr(d.acqAfter)+"과 인테리어·이사 비용은 별도로 준비하세요.");
-
-  $("checks").innerHTML = c.join("");
+  $("checks").innerHTML=c.join("");
 }
 
-/* ── 저장 · 불러오기 ────────────────────────────── */
+/* 저장 · 불러오기 */
 function snapshot(){
   const s={};
-  KEYS.forEach(k=>{const el=$(MAP[k]); s[k]= el.type==="checkbox"?el.checked:el.value;});
-  s.funds=readFunds(); s.clauses=clauses; s.events=events;
-  s.docs=[...document.querySelectorAll("#docs input")].map(i=>i.checked);
+  KEYS.forEach(k=>{const el=$(MAP[k]); s[k]=el.type==="checkbox"?el.checked:el.value;});
+  s.funds=readFunds().map(f=>({n:f.n,k:f.k,c:f.c,m:f.m,j:f.j,risk:f.risk,memo:f.memo}));
   return s;
 }
 function apply(s){
   KEYS.forEach(k=>{const el=$(MAP[k]); if(!el) return;
-    if(el.type==="checkbox") el.checked=!!s[k]; else el.value = s[k]??"";});
-  $("fundRows").innerHTML=""; (s.funds&&s.funds.length?s.funds:[{n:"",a:"",k:"본인",m:""}]).forEach(addFund);
-  clauses = Array.isArray(s.clauses)?s.clauses:[];
-  events  = Array.isArray(s.events)?s.events:[];
-  if(Array.isArray(s.docs)) document.querySelectorAll("#docs input").forEach((i,n)=>i.checked=!!s.docs[n]);
-  renderClauses(); renderEvents(); calc();
+    if(el.type==="checkbox") el.checked=!!s[k]; else el.value=s[k]??"";});
+  $("fundRows").innerHTML="";
+  (s.funds&&s.funds.length?s.funds:[{n:"",k:"본인",c:"",m:"",j:"",risk:false,memo:""}]).forEach(addFund);
+  TODO_DONE.clear();
+  calc();
 }
-const blank = () => ({ltv:70,dti:60,mrate:4.5,myears:40,crate:6.5,low:0.5,high:1,room:"0",
-  funds:[{n:"",a:"",k:"본인",m:""}],clauses:[],events:[],docs:[]});
-
-/* ── 초기화 · 이벤트 ────────────────────────────── */
-$("docs").innerHTML = CHECKLIST.map((t,i)=>
-  '<div class="doc"><input type="checkbox" id="dc'+i+'"><label for="dc'+i+'">'+t+'</label></div>').join("");
+const blank=()=>({funds:[{n:"",k:"본인",c:"",m:"",j:"",risk:false,memo:""}]});
 
 KEYS.forEach(k=>{const el=$(MAP[k]); if(el) el.addEventListener("input",calc);});
-$("i_room").addEventListener("change",calc);
-$("d_final").addEventListener("input",drawTimeline);
-
-$("btnAddFund").onclick = ()=>{ addFund(); calc(); };
-$("btnAddClause").onclick = ()=>{ clauses.push({t:"",g:"기타",on:false}); renderClauses(); };
-$("btnClauseTpl").onclick = ()=>{
-  if(clauses.length && !confirm("현재 특약 목록을 기본 문구로 바꿉니다. 진행할까요?")) return;
-  clauses = CLAUSE_TPL.map(c=>({...c,on:false})); renderClauses();
-};
-$("btnAddEvent").onclick = ()=>{ events.push({n:"",d:"",k:"기타",m:"",done:false}); renderEvents(); };
-$("btnEventTpl").onclick = ()=>{
-  if(events.length && !confirm("현재 일정을 기본 일정으로 바꿉니다. 날짜는 직접 넣으셔야 합니다. 진행할까요?")) return;
-  events = EVENT_TPL.map(e=>({...e,d:"",m:"",done:false})); renderEvents();
-};
-$("btnPrint").onclick = ()=>window.print();
-$("btnReset").onclick = ()=>{ if(confirm("입력한 내용을 모두 비웁니다. 진행할까요?")) apply(blank()); };
-$("btnSave").onclick = ()=>{
-  const blob = new Blob([JSON.stringify(snapshot(),null,2)],{type:"application/json"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "매수계획_"+($("i_name").value.trim()||"주택")+"_"+new Date().toISOString().slice(0,10)+".json";
+$("btnAddFund").onclick=()=>{ addFund(); calc(); };
+$("btnPrint").onclick=()=>window.print();
+$("btnReset").onclick=()=>{ if(confirm("입력한 내용을 모두 비웁니다. 진행할까요?")) apply(blank()); };
+$("btnSave").onclick=()=>{
+  const blob=new Blob([JSON.stringify(snapshot(),null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="자금조달_"+($("i_name").value.trim()||"주택")+"_"+new Date().toISOString().slice(0,10)+".json";
   a.click(); URL.revokeObjectURL(a.href);
 };
-$("btnLoad").onclick = ()=>$("fileIn").click();
-$("fileIn").onchange = e=>{
+$("btnLoad").onclick=()=>$("fileIn").click();
+$("fileIn").onchange=e=>{
   const f=e.target.files[0]; if(!f) return;
   const r=new FileReader();
-  r.onload = ()=>{ try{ apply(JSON.parse(r.result)); }catch(err){ alert("파일을 읽지 못했습니다. 이 페이지에서 내보낸 JSON 파일인지 확인하세요."); } };
+  r.onload=()=>{ try{ apply(JSON.parse(r.result)); }catch(err){ alert("파일을 읽지 못했습니다. 이 페이지에서 내보낸 JSON인지 확인하세요."); } };
   r.readAsText(f); e.target.value="";
 };
 
