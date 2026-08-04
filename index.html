@@ -587,6 +587,8 @@ function calc(){
   renderDocs(funds);
 }
 
+const TODO_DONE = new Set();
+
 /* 자금조달계획서 증빙 서류 (참고3·참고4 기준) */
 const DOC_CATS = {
   "예금":       { label:"금융기관 예금액", docs:["예금잔액증명서"] },
